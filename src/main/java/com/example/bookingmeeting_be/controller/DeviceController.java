@@ -22,15 +22,15 @@ public class DeviceController {
     public Device create(@RequestBody Device device) { return service.create(device); }
 
     @PutMapping("/{id}")
-    public Device update(@PathVariable Long id, @RequestBody Device device) {
+    public Device update(@PathVariable int id, @RequestBody Device device) {
         return service.update(id, device);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) { service.delete(id); }
+    public void delete(@PathVariable int id) { service.delete(id); }
 
     @PatchMapping("/{id}/quantity")
-    public void updateQuantity(@PathVariable Long id, @RequestParam int delta) {
+    public void updateQuantity(@PathVariable int id, @RequestParam int delta) {
         service.updateQuantity(id, delta);
     }
 }

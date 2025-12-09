@@ -7,15 +7,23 @@ import jakarta.persistence.*;
 public class Device {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String category;
+
+    @Column(nullable = false)
     private String status;
+
+    @Column(nullable = false)
     private Integer quantity;
+
     private String description;
 
-    public Device(Long id, String name, String category, String status, Integer quantity, String description) {
+    public Device(int id, String name, String category, String status, Integer quantity, String description) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -27,11 +35,11 @@ public class Device {
     public Device() {
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
