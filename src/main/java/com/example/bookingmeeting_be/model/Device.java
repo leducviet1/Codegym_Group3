@@ -6,21 +6,14 @@ import jakarta.persistence.*;
 @Table(name = "devices")
 public class Device {
     @Id
+    @Column(name = "device_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     private String category;
-
-    @Column(nullable = false)
     private String status;
-
-    @Column(nullable = false)
     private Integer quantity;
-
     private String description;
 
     public Device(int id, String name, String category, String status, Integer quantity, String description) {
