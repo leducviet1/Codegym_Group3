@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Phòng Họp</title>
+    <div th:replace="~{layouts/admin-head :: admin-head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{layouts/admin-navbar :: admin-navbar}"></div>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1 th:text="${meetingRoom.id != null ? 'Chỉnh Sửa Phòng Họp' : 'Tạo Phòng Họp Mới'}"></h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/meeting-rooms">Phòng Họp</a></li>
+                <li class="breadcrumb-item active" th:text="${meetingRoom.id != null ? 'Chỉnh Sửa' : 'Tạo Mới'}"></li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-8">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Thông Tin Phòng Họp</h5>
+
+                        <form th:action="${meetingRoom.id != null ? '/admin/meeting-rooms/' + meetingRoom.id : '/admin/meeting-rooms'}"
+                              method="POST" class="needs-validation">
+
+                            <!-- Tên Phòng -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Tên Phòng Họp <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name"
+                                       th:value="${meetingRoom.name}" required>
+                                <small class="form-text text-muted">Nhập tên phòng họp</small>
+                            </div>
+
+                            <!-- Sức Chứa -->
+                            <div class="mb-3">
+                                <label for="capacity" class="form-label">Sức Chứa (Người) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="capacity" name="capacity"
+                                       th:value="${meetingRoom.capacity}" min="1" required>
+                                <small class="form-text text-muted">Nhập số lượng người tối đa</small>
+                            </div>
+
+                            <!-- Tính Năng -->
+                            <div class="mb-3">
+                                <label for="features" class="form-label">Tính Năng</label>
+                                <textarea class="form-control" id="features" name="features" rows="3"
+                                          placeholder="VD: Máy chiếu, Bảng trắng, Điều hòa...">[[${meetingRoom.features}]]</textarea>
+                                <small class="form-text text-muted">Nhập các tính năng của phòng, cách nhau bằng dấu phẩy</small>
+                            </div>
+
+                            <!-- Trạng Thái -->
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Trạng Thái <span class="text-danger">*</span></label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="">-- Chọn Trạng Thái --</option>
+                                    <option value="ACTIVE" th:selected="${meetingRoom.status == 'ACTIVE'}">Hoạt Động</option>
+                                    <option value="INACTIVE" th:selected="${meetingRoom.status == 'INACTIVE'}">Không Hoạt Động</option>
+                                    <option value="MAINTENANCE" th:selected="${meetingRoom.status == 'MAINTENANCE'}">Bảo Trì</option>
+                                </select>
+                            </div>
+
+                            <!-- Nút Hành Động -->
+                            <div class="mb-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle"></i>
+                                    <span th:text="${meetingRoom.id != null ? 'Cập Nhật' : 'Tạo Mới'}"></span>
+                                </button>
+                                <a href="/admin/meeting-rooms" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Hủy
+                                </a>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Thông Tin Thêm -->
+            <div class="col-lg-4">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Hướng Dẫn</h5>
+                        <p><strong>Tên Phòng Họp:</strong> Tên duy nhất của phòng</p>
+                        <p><strong>Sức Chứa:</strong> Số lượng người tối đa có thể sử dụng</p>
+                        <p><strong>Tính Năng:</strong> Các thiết bị và trang thiết bị có sẵn</p>
+                        <p><strong>Trạng Thái:</strong> Tình trạng của phòng (Hoạt động/Không hoạt động/Bảo trì)</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{layouts/admin-footer :: admin-footer}"></div>
+
+</body>
+
+</html>
+
