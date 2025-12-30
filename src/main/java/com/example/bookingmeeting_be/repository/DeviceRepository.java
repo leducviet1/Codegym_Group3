@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Integer> {
-    List<Device> findByCategory(String category);
+    List<Device> findByType(String type);
     List<Device> findByStatus(String status);
 }
 
