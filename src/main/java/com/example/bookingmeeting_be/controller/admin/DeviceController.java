@@ -1,4 +1,4 @@
-package com.example.bookingmeeting_be.controller;
+package com.example.bookingmeeting_be.controller.admin;
 
 import com.example.bookingmeeting_be.model.Device;
 import com.example.bookingmeeting_be.services.DeviceService;

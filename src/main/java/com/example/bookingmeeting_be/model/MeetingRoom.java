@@ -1,39 +1,41 @@
-package onmeet.entity;
-
+package com.example.bookingmeeting_be.model;
 import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Devices")
-public class Device {
+@Table(name = "Meeting_Rooms")
+public class    MeetingRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "device_id")
+    @Column(name = "room_id")
     private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "capacity")
+    private Integer capacity;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "features")
+    private String features;
 
     @Column(name = "status")
     private String status;
 
     // Quan hệ 1-n với RoomAsset
-    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "meetingRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RoomAsset> roomAssets = new HashSet<>();
 
-    public Device() {}
+    // Constructor
+    public MeetingRoom() {
+    }
 
-    public Device(String name, String description, String type, String status) {
+    public MeetingRoom(String name, Integer capacity, String features, String status) {
         this.name = name;
-        this.description = description;
-        this.type = type;
+        this.capacity = capacity;
+        this.features = features;
         this.status = status;
     }
 
@@ -54,20 +56,20 @@ public class Device {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getCapacity() {
+        return capacity;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
     }
 
-    public String getType() {
-        return type;
+    public String getFeatures() {
+        return features;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFeatures(String features) {
+        this.features = features;
     }
 
     public String getStatus() {
@@ -86,4 +88,3 @@ public class Device {
         this.roomAssets = roomAssets;
     }
 }
-

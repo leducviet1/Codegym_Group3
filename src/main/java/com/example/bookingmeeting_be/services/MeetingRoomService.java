@@ -1,7 +1,7 @@
-package onmeet.service;
+package com.example.bookingmeeting_be.services;
 
-import onmeet.entity.MeetingRoom;
-import onmeet.repository.MeetingRoomRepository;
+import com.example.bookingmeeting_be.model.MeetingRoom;
+import com.example.bookingmeeting_be.repository.MeetingRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

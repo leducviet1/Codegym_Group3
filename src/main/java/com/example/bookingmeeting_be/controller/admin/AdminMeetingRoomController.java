@@ -1,7 +1,7 @@
-package onmeet.admin.adminController;
+package com.example.bookingmeeting_be.controller.admin;
 
-import onmeet.entity.MeetingRoom;
-import onmeet.service.MeetingRoomService;
+import com.example.bookingmeeting_be.model.MeetingRoom;
+import com.example.bookingmeeting_be.services.MeetingRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

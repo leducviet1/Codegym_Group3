@@ -1,6 +1,7 @@
-package onmeet.entity;
+package com.example.bookingmeeting_be.model;
 
 import jakarta.persistence.*;
+import com.example.bookingmeeting_be.model.Device;
 
 @Entity
 @Table(name = "Room_Assets")
@@ -19,12 +20,12 @@ public class RoomAsset {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "device_id", nullable = false)
-    private Device device;
+    private com.example.bookingmeeting_be.model.Device device;
 
     public RoomAsset() {
     }
 
-    public RoomAsset(Integer quantity, MeetingRoom meetingRoom, Device device) {
+    public RoomAsset(Integer quantity, MeetingRoom meetingRoom, com.example.bookingmeeting_be.model.Device device) {
         this.quantity = quantity;
         this.meetingRoom = meetingRoom;
         this.device = device;
@@ -54,7 +55,7 @@ public class RoomAsset {
         this.meetingRoom = meetingRoom;
     }
 
-    public Device getDevice() {
+    public com.example.bookingmeeting_be.model.Device getDevice() {
         return device;
     }
 

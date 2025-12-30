@@ -1,6 +1,6 @@
-package onmeet.repository;
+package com.example.bookingmeeting_be.repository;
 
-import onmeet.entity.MeetingRoom;
+import com.example.bookingmeeting_be.model.MeetingRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MeetingRoomRepository extends JpaRepository<MeetingRoom, Long> {
