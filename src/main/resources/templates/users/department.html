@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/head :: head}">
+  <meta charset="UTF-8">
+  <title>Home</title>
+</head>
+
+<body class="index-page">
+
+<!-- Navbar start -->
+<div th:replace="~{layouts/navbar :: navbar}"></div>
+<!-- Navbar End -->
+
+<main class="main" style="margin-top: 100px;">
+
+  <section id="rooms" class="speakers section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Danh sách phòng họp</h2>
+      <p>Danh sách phòng có sẵn phục vụ cho các cuộc họp quan trọng</p>
+    </div>
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+      <div class="row g-4">
+
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="speaker-card h-100 d-flex flex-column">
+            <div class="speaker-image">
+              <img th:src="@{/assets/img/rooms/room-2.jpg}" alt="Meeting Room A" class="img-fluid">
+              <div class="speaker-overlay">
+                <div class="social-links">
+                  <a href="#" aria-label="Wifi" title="Wifi tốc độ cao"><i class="bi bi-wifi"></i></a>
+                  <a href="#" aria-label="Projector" title="Máy chiếu 4K"><i class="bi bi-projector"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="speaker-content flex-grow-1 d-flex flex-column">
+              <h4>Phòng Hội Nghị Grand</h4>
+              <p class="speaker-title">Sức chứa: 50 - 100 người</p>
+              <p class="speaker-company">Vị trí: Tầng 2, Khu A</p>
+              <p class="speaker-bio mb-4">Không gian sang trọng, hệ thống âm thanh vòm, màn hình LED 200 inch, phù hợp cho các buổi hội thảo lớn.</p>
+
+              <div class="speaker-session mt-auto d-flex justify-content-between align-items-center border-top pt-3">
+              <span class="text-success fw-bold small">
+                <i class="bi bi-check-circle-fill me-1"></i>Đang trống
+              </span>
+                <a th:href="@{/chi-tiet-phong}" class="btn btn-primary btn-sm rounded-pill px-3">
+                  Xem chi tiết <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="250">
+          <div class="speaker-card h-100 d-flex flex-column">
+            <div class="speaker-image">
+              <img th:src="@{/assets/img/rooms/room-4.webp}" alt="Meeting Room B" class="img-fluid">
+              <div class="speaker-overlay">
+                <div class="social-links">
+                  <a href="#" aria-label="Screen" title="Màn hình TV"><i class="bi bi-display"></i></a>
+                  <a href="#" aria-label="AC" title="Điều hòa"><i class="bi bi-snow"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="speaker-content flex-grow-1 d-flex flex-column">
+              <h4>Phòng Sáng Tạo (Idea Lab)</h4>
+              <p class="speaker-title">Sức chứa: 10 - 15 người</p>
+              <p class="speaker-company">Vị trí: Tầng 3, Khu B</p>
+              <p class="speaker-bio mb-4">Thiết kế mở, nhiều bảng trắng, nội thất linh hoạt đầy màu sắc để kích thích tư duy sáng tạo cho team brainstorming.</p>
+
+              <div class="speaker-session mt-auto d-flex justify-content-between align-items-center border-top pt-3">
+              <span class="text-warning fw-bold small">
+                <i class="bi bi-clock-history me-1"></i>Đặt trước 1h
+              </span>
+                <a th:href="@{/chi-tiet-phong}" class="btn btn-primary btn-sm rounded-pill px-3">
+                  Xem chi tiết <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+          <div class="speaker-card h-100 d-flex flex-column">
+            <div class="speaker-image">
+              <img th:src="@{/assets/img/rooms/room-3.jpg}" alt="Meeting Room C" class="img-fluid">
+              <div class="speaker-overlay">
+                <div class="social-links">
+                  <a href="#" aria-label="Private" title="Cách âm"><i class="bi bi-mic-mute"></i></a>
+                  <a href="#" aria-label="Call" title="Hội nghị truyền hình"><i class="bi bi-telephone"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="speaker-content flex-grow-1 d-flex flex-column">
+              <h4>Phòng VIP Excutive</h4>
+              <p class="speaker-title">Sức chứa: 6 - 8 người</p>
+              <p class="speaker-company">Vị trí: Tầng 5 (Rooftop)</p>
+              <p class="speaker-bio mb-4">Riêng tư tuyệt đối, tường cách âm, ghế da cao cấp, view toàn cảnh thành phố, hệ thống họp trực tuyến Polycom.</p>
+
+              <div class="speaker-session mt-auto d-flex justify-content-between align-items-center border-top pt-3">
+              <span class="text-danger fw-bold small">
+                <i class="bi bi-tools me-1"></i>Đang bảo trì
+              </span>
+                <a href="#" class="btn btn-secondary btn-sm rounded-pill px-3 disabled">
+                  Đang sửa chữa
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="350">
+          <div class="speaker-card h-100 d-flex flex-column">
+            <div class="speaker-image">
+              <img th:src="@{/assets/img/rooms/room-5.png}" alt="Meeting Room D" class="img-fluid">
+              <div class="speaker-overlay">
+                <div class="social-links">
+                  <a href="#" aria-label="PC" title="Máy tính"><i class="bi bi-pc-display"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="speaker-content flex-grow-1 d-flex flex-column">
+              <h4>Phòng Đào Tạo (Training)</h4>
+              <p class="speaker-title">Sức chứa: 30 người</p>
+              <p class="speaker-company">Vị trí: Tầng 1, Khu C</p>
+              <p class="speaker-bio mb-4">Trang bị sẵn 30 máy tính cấu hình cao, bảng tương tác thông minh, phù hợp cho các buổi workshop kỹ thuật.</p>
+
+              <div class="speaker-session mt-auto d-flex justify-content-between align-items-center border-top pt-3">
+              <span class="text-success fw-bold small">
+                <i class="bi bi-check-circle-fill me-1"></i>Đang trống
+              </span>
+                <a th:href="@{/chi-tiet-phong}" class="btn btn-primary btn-sm rounded-pill px-3">
+                  Xem chi tiết <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+          <div class="speaker-card h-100 d-flex flex-column">
+            <div class="speaker-image">
+              <img th:src="@{/assets/img/rooms/room-6.jpg}" alt="Meeting Room E" class="img-fluid">
+              <div class="speaker-overlay">
+                <div class="social-links">
+                  <a href="#" aria-label="Coffee" title="Tea break"><i class="bi bi-cup-hot"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="speaker-content flex-grow-1 d-flex flex-column">
+              <h4>Phòng Họp Mở (Open Space)</h4>
+              <p class="speaker-title">Sức chứa: 20 người</p>
+              <p class="speaker-company">Vị trí: Sảnh chính</p>
+              <p class="speaker-bio mb-4">Không gian bán mở, gần quầy pantry, thích hợp cho các cuộc gặp gỡ thân mật, phỏng vấn hoặc tiếp khách hàng.</p>
+
+              <div class="speaker-session mt-auto d-flex justify-content-between align-items-center border-top pt-3">
+              <span class="text-success fw-bold small">
+                <i class="bi bi-check-circle-fill me-1"></i>Đang trống
+              </span>
+                <a th:href="@{/chi-tiet-phong}" class="btn btn-primary btn-sm rounded-pill px-3">
+                  Xem chi tiết <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="450">
+          <div class="speaker-card h-100 d-flex flex-column">
+            <div class="speaker-image">
+              <img th:src="@{/assets/img/rooms/room-1.jpg}" alt="Meeting Room F" class="img-fluid">
+              <div class="speaker-overlay">
+                <div class="social-links">
+                  <a href="#" aria-label="Secure" title="Bảo mật"><i class="bi bi-shield-lock"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="speaker-content flex-grow-1 d-flex flex-column">
+              <h4>Phòng Chiến Lược (War Room)</h4>
+              <p class="speaker-title">Sức chứa: 12 người</p>
+              <p class="speaker-company">Vị trí: Tầng hầm B1</p>
+              <p class="speaker-bio mb-4">An ninh cao, không sóng điện thoại, thiết bị chống nghe lén, dành cho các cuộc họp cổ đông hoặc chiến lược mật.</p>
+
+              <div class="speaker-session mt-auto d-flex justify-content-between align-items-center border-top pt-3">
+              <span class="text-info fw-bold small">
+                <i class="bi bi-exclamation-circle-fill me-1"></i>Cần duyệt
+              </span>
+                <a th:href="@{/chi-tiet-phong}" class="btn btn-primary btn-sm rounded-pill px-3">
+                  Xem chi tiết <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{layouts/footer :: footer}"></div>
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<div id="preloader"></div>
+
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/php-email-form/validate.js}"></script>
+<script th:src="@{/assets/vendor/aos/aos.js}"></script>
+<script th:src="@{/assets/vendor/purecounter/purecounter_vanilla.js}"></script>
+<script th:src="@{/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/assets/vendor/isotope-layout/isotope.pkgd.min.js}"></script>
+<script th:src="@{/assets/vendor/swiper/swiper-bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+
+<script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>

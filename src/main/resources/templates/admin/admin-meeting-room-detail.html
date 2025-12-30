@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết Phòng Họp</title>
+    <div th:replace="~{layouts/admin-head :: admin-head}"></div>
+</head>
+
+<body>
+
+<div th:replace="~{layouts/admin-navbar :: admin-navbar}"></div>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Chi Tiết Phòng Họp</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/meeting-rooms">Phòng Họp</a></li>
+                <li class="breadcrumb-item active" th:text="${meetingRoom.name}"></li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-8">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Thông Tin Phòng Họp</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Tên Phòng:</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary" th:text="${meetingRoom.name}">
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Sức Chứa:</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <span th:text="${meetingRoom.capacity}"></span> người
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Tính Năng:</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary" th:text="${meetingRoom.features}">
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Trạng Thái:</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <span th:if="${meetingRoom.status == 'ACTIVE'}" class="badge bg-success">Hoạt Động</span>
+                                <span th:if="${meetingRoom.status == 'INACTIVE'}" class="badge bg-secondary">Không Hoạt Động</span>
+                                <span th:if="${meetingRoom.status == 'MAINTENANCE'}" class="badge bg-warning text-dark">Bảo Trì</span>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Hành Động:</h6>
+                            </div>
+                            <div class="col-sm-9">
+                                <a th:href="@{/admin/meeting-rooms/edit/{id}(id=${meetingRoom.id})}"
+                                   class="btn btn-warning btn-sm text-white">
+                                    <i class="bi bi-pencil"></i> Chỉnh Sửa
+                                </a>
+                                <form th:action="@{/admin/meeting-rooms/{id}/delete(id=${meetingRoom.id})}" method="POST" style="display: inline;"
+                                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>
+                                </form>
+                                <a href="/admin/meeting-rooms" class="btn btn-secondary btn-sm">
+                                    <i class="bi bi-arrow-left"></i> Quay Lại
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Thiết Bị & Tài Sản -->
+            <div class="col-lg-4">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Thiết Bị & Tài Sản</h5>
+
+                        <div th:if="${#lists.isEmpty(meetingRoom.roomAssets)}" class="text-muted text-center py-4">
+                            <i class="bi bi-inbox"></i> Chưa có thiết bị
+                        </div>
+
+                        <div th:each="asset : ${meetingRoom.roomAssets}" class="mb-3 p-2 border rounded">
+                            <strong th:text="${asset.device.name}"></strong>
+                            <br>
+                            <small class="text-muted">
+                                Loại: <span th:text="${asset.device.type}"></span>
+                            </small>
+                            <br>
+                            <small class="text-muted">
+                                Số Lượng: <span th:text="${asset.quantity}"></span>
+                            </small>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{layouts/admin-footer :: admin-footer}"></div>
+
+</body>
+
+</html>
+

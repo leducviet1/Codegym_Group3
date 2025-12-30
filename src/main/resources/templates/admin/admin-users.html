@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý người dùng</title>
+    <div th:replace="~{layouts/admin-head :: admin-head}"></div>
+    <style>
+        .modal-header { background-color: #f8f9fa; border-bottom: 2px solid #dee2e6; }
+        .form-label { font-weight: 600; }
+        .badge-admin { background-color: #0d6efd; color: white; }
+        .badge-user { background-color: #6c757d; color: white; }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{layouts/admin-navbar :: admin-navbar}"></div>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Quản lý người dùng</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Người dùng</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+                            <h5 class="card-title mb-0">Danh sách người dùng</h5>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openModal('add')">
+                                <i class="bi bi-plus-circle"></i> Thêm người dùng
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle" id="userTable">
+                                <thead class="table-light">
+                                <tr>
+                                    <th width="50">#</th>
+                                    <th>Tên</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Vai trò</th> <th width="180">Hành động</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Nguyễn Văn A</td>
+                                    <td>admin@gmail.com</td>
+                                    <td>0123456789</td>
+                                    <td><span class="badge badge-admin">ADMIN</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openModal('edit', this)">
+                                            <i class="bi bi-pencil"></i> Sửa
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="confirmDelete(1)">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Trần Thị B</td>
+                                    <td>user@gmail.com</td>
+                                    <td>0987654321</td>
+                                    <td><span class="badge badge-user">USER</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openModal('edit', this)">
+                                            <i class="bi bi-pencil"></i> Sửa
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="confirmDelete(2)">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Thông tin người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form id="userForm">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <input type="hidden" id="userId" name="id">
+
+                        <div class="col-md-6">
+                            <label class="form-label">Họ và tên</label>
+                            <label for="name"></label><input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <label for="email"></label><input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Số điện thoại</label>
+                            <label for="phone"></label><input type="tel" class="form-control" id="phone" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Vai trò</label>
+                            <label for="role"></label><select class="form-select" id="role" required>
+                                <option value="" selected disabled>Chọn vai trò...</option>
+                                <option value="ADMIN">ADMIN (Quản trị viên)</option>
+                                <option value="USER">USER (Người dùng)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu dữ liệu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layouts/admin-footer :: admin-footer}"></div>
+
+<script>
+    function openModal(mode, button) {
+        const title = document.getElementById('userModalLabel');
+        const form = document.getElementById('userForm');
+
+        if (mode === 'add') {
+            title.innerHTML = '<i class="bi bi-plus-circle"></i> Thêm người dùng mới';
+            form.reset();
+            document.getElementById('userId').value = "";
+        } else {
+            title.innerHTML = '<i class="bi bi-pencil-square"></i> Cập nhật người dùng';
+
+            const row = button.closest('tr');
+            const cells = row.cells;
+
+            document.getElementById('userId').value = cells[0].innerText;
+            document.getElementById('name').value   = cells[1].innerText;
+            document.getElementById('email').value  = cells[2].innerText;
+            document.getElementById('phone').value  = cells[3].innerText;
+
+            const roleText = cells[4].innerText.trim();
+            document.getElementById('role').value = roleText;
+        }
+    }
+
+    document.getElementById('userForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('userId').value;
+        const name = document.getElementById('name').value;
+        const role = document.getElementById('role').value;
+
+        alert(`${id ? 'Cập nhật' : 'Thêm'} thành công: ${name} với vai trò ${role}`);
+        bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+    });
+
+    function confirmDelete(id) {
+        if(confirm("Xác nhận xóa người dùng này?")) {
+            alert("Đã xóa ID: " + id);
+        }
+    }
+</script>
+
+</body>
+</html>

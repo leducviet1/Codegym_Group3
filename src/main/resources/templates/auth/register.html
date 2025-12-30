@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layouts/head :: head}">
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+
+<body class="index-page">
+
+<!-- Navbar start -->
+<div th:replace="~{layouts/navbar :: navbar}"></div>
+<!-- Navbar End -->
+
+<main class="main" style="margin-top: 100px;">
+
+    <div class="page-title">
+        <div class="heading">
+            <div class="container">
+                <div class="row d-flex justify-content-center text-center">
+                    <div class="col-lg-8">
+                        <h1 class="heading-title">Đăng ký thành viên</h1>
+                        <p class="mb-0">Tạo tài khoản mới để bắt đầu đặt phòng họp và quản lý sự kiện chuyên nghiệp.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="breadcrumbs">
+            <div class="container">
+                <ol>
+                    <li><a th:href="@{/home}">Trang chủ</a></li>
+                    <li class="current">Đăng ký</li>
+                </ol>
+            </div>
+        </nav>
+    </div><section id="register" class="register section light-background">
+    <div class="container" data-aos="fade-up">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+
+                <div class="card shadow border-0 rounded-4">
+                    <div class="card-body p-5">
+
+                        <div class="text-center mb-4">
+                            <h3 class="fw-bold text-primary">Tạo tài khoản mới</h3>
+                            <p class="text-muted small">Điền thông tin chi tiết của bạn bên dưới</p>
+                        </div>
+
+                        <form th:action="@{/register}" method="post">
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="fullName" placeholder="Nguyễn Văn A" required>
+                                <label for="fullName">Họ và tên</label>
+                                <div class="text-danger small mt-1"></div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" placeholder="name@company.com" required>
+                                <label for="email">Email công ty</label>
+                                <div class="text-danger small mt-1"></div>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="tel" class="form-control" id="phone" placeholder="09xxxx">
+                                        <label for="phone">Số điện thoại</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="department">
+                                            <option value="" selected>Chọn bộ phận</option>
+                                            <option value="IT">IT / Kỹ thuật</option>
+                                            <option value="HR">Nhân sự (HR)</option>
+                                            <option value="SALE">Kinh doanh (Sales)</option>
+                                            <option value="MKT">Marketing</option>
+                                        </select>
+                                        <label for="department">Phòng ban</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" placeholder="Mật khẩu" required>
+                                <label for="password">Mật khẩu</label>
+                                <div class="text-danger small mt-1"></div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+                                <label for="confirmPassword">Xác nhận mật khẩu</label>
+                                <div class="text-danger small mt-1"></div>
+                            </div>
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" value="" id="acceptTerms" required>
+                                <label class="form-check-label small text-muted" for="acceptTerms">
+                                    Tôi đồng ý với <a th:href="@{/terms}" class="text-decoration-none">Điều khoản sử dụng</a> và <a th:href="@{/policy}" class="text-decoration-none">Chính sách bảo mật</a>.
+                                </label>
+                            </div>
+
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg py-3 rounded-3 fw-bold">Đăng ký tài khoản</button>
+                            </div>
+
+                            <div class="text-center">
+                                <span class="text-muted small">Bạn đã có tài khoản?</span>
+                                <a th:href="@{/login}" class="text-decoration-none fw-bold ms-1">Đăng nhập</a>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<div th:replace="~{layouts/footer :: footer}"></div>
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<div id="preloader"></div>
+
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/php-email-form/validate.js}"></script>
+<script th:src="@{/assets/vendor/aos/aos.js}"></script>
+<script th:src="@{/assets/vendor/purecounter/purecounter_vanilla.js}"></script>
+<script th:src="@{/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/assets/vendor/isotope-layout/isotope.pkgd.min.js}"></script>
+<script th:src="@{/assets/vendor/swiper/swiper-bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+
+<script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>

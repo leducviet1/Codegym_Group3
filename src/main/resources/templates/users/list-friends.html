@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layouts/head :: head}">
+    <meta charset="UTF-8">
+    <title>Danh sách đồng nghiệp</title>
+</head>
+
+<body class="index-page">
+
+<div th:replace="~{layouts/navbar :: navbar}"></div>
+<main class="main" style="margin-top: 100px;">
+
+    <div class="page-title">
+        <div class="heading">
+            <div class="container">
+                <div class="row d-flex justify-content-center text-center">
+                    <div class="col-lg-8">
+                        <h1 class="heading-title">Danh sách đồng nghiệp</h1>
+                        <p class="mb-0">Quản lý mạng lưới kết nối, thêm thành viên mới vào nhóm và tìm kiếm thông tin liên lạc.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="breadcrumbs">
+            <div class="container">
+                <ol>
+                    <li><a th:href="@{/home}">Trang chủ</a></li>
+                    <li><a th:href="@{/ho-so}">Trang cá nhân</a></li>
+                    <li class="current">Đồng nghiệp</li>
+                </ol>
+            </div>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="container" data-aos="fade-up">
+
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-1"></i> <span th:text="${successMessage}">Thao tác thành công!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-1"></i> <span th:text="${errorMessage}">Có lỗi xảy ra!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-body p-4">
+
+                    <div class="row g-3 mb-4 align-items-center justify-content-between">
+                        <div class="col-md-6 col-lg-5">
+                            <form th:action="@{/danh-sach-dong-nghiep}" method="get" class="position-relative">
+                                <input type="text" class="form-control ps-5 rounded-pill" name="keyword"
+                                       th:value="${keyword}" placeholder="Tìm theo tên, email hoặc bộ phận...">
+                                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                            </form>
+                        </div>
+
+                        <div class="col-md-4 col-lg-3 text-md-end">
+                            <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addColleagueModal">
+                                <i class="bi bi-person-plus-fill me-2"></i>Thêm mới
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="ps-4">Thành viên</th>
+                                <th scope="col">Bộ phận</th>
+                                <th scope="col">Liên hệ</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col" class="text-end pe-4">Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${#lists.isEmpty(colleagues)}">
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="bi bi-people display-6 d-block mb-3"></i>
+                                    Chưa có đồng nghiệp nào trong danh sách.
+                                </td>
+                            </tr>
+
+                            <tr th:each="person : ${colleagues}">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <img th:src="${person.avatarUrl != null ? person.avatarUrl : '/assets/img/default-avatar.png'}"
+                                             alt="" class="rounded-circle me-3" style="width: 45px; height: 45px; object-fit: cover;">
+                                        <div>
+                                            <div class="fw-bold text-dark" th:text="${person.fullName}">Nguyễn Văn A</div>
+                                            <div class="small text-muted" th:text="${person.jobTitle}">Developer</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border" th:text="${person.department}">IT Support</span>
+                                </td>
+                                <td>
+                                    <div class="small"><i class="bi bi-envelope me-1 text-primary"></i> <span th:text="${person.email}">email@example.com</span></div>
+                                    <div class="small"><i class="bi bi-telephone me-1 text-success"></i> <span th:text="${person.phone}">0912345678</span></div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success-subtle text-success rounded-pill px-3">Đang hoạt động</span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <button type="button" class="btn btn-outline-danger btn-sm rounded-circle"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="'#deleteModal-' + ${person.id}"
+                                            title="Xóa khỏi danh sách">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+
+                                    <div class="modal fade" th:id="'deleteModal-' + ${person.id}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content text-start">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Xác nhận xóa</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn xóa <strong>[[${person.fullName}]]</strong> khỏi danh sách đồng nghiệp không?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                    <form th:action="@{/colleagues/delete}" method="post">
+                                                        <input type="hidden" name="id" th:value="${person.id}">
+                                                        <button type="submit" class="btn btn-danger">Xóa bỏ</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <nav class="mt-4" aria-label="Page navigation" th:if="${totalPages > 1}">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Trước</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="addColleagueModal" tabindex="-1" aria-labelledby="addColleagueLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form th:action="@{/colleagues/add}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="addColleagueLabel">Thêm đồng nghiệp mới</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted small mb-3">Nhập số điện thoại hoặc email của người bạn muốn kết nối. Hệ thống sẽ tự động tìm kiếm và gửi lời mời.</p>
+
+                        <div class="mb-3">
+                            <label for="contactInfo" class="form-label fw-bold">Email hoặc Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-person-badge"></i></span>
+                                <input type="text" class="form-control" id="contactInfo" name="contactInfo" placeholder="VD: user@company.com hoặc 0912..." required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="note" class="form-label fw-bold">Lời nhắn (Tùy chọn)</label>
+                            <textarea class="form-control" id="note" name="note" rows="3" placeholder="Xin chào, mình muốn kết nối..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Gửi lời mời</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div th:replace="~{layouts/footer :: footer}"></div>
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<div id="preloader"></div>
+
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/php-email-form/validate.js}"></script>
+<script th:src="@{/assets/vendor/aos/aos.js}"></script>
+<script th:src="@{/assets/vendor/purecounter/purecounter_vanilla.js}"></script>
+<script th:src="@{/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/assets/vendor/isotope-layout/isotope.pkgd.min.js}"></script>
+<script th:src="@{/assets/vendor/swiper/swiper-bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+
+<script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>

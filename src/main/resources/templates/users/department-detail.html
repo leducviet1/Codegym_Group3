@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layouts/head :: head}">
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+
+<body class="index-page">
+
+<!-- Navbar start -->
+<div th:replace="~{layouts/navbar :: navbar}"></div>
+<!-- Navbar End -->
+
+<main class="main" style="margin-top: 100px;">
+    <div class="page-title">
+        <div class="heading">
+            <div class="container">
+                <div class="row d-flex justify-content-center text-center">
+                    <div class="col-lg-8">
+                        <h1 class="heading-title">Chi tiết phòng họp</h1>
+                        <p class="mb-0">
+                            Xem thông tin chi tiết, trang thiết bị và lịch trình trống của phòng họp.
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="breadcrumbs">
+            <div class="container">
+                <ol>
+                    <li><a th:href="@{/home}">Trang chủ</a></li>
+                    <li><a th:href="@{/rooms}">Danh sách phòng</a></li>
+                    <li class="current">Phòng Hội Nghị Grand</li>
+                </ol>
+            </div>
+        </nav>
+    </div><section id="room-detail" class="venue-2 section">
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-5">
+            <div class="col-lg-7">
+                <div class="venue-card" data-aos="fade-right" data-aos-delay="100">
+                    <div class="venue-image">
+                        <img th:src="@{/assets/img/rooms/room-2.jpg}" alt="Meeting Room Detail" class="img-fluid rounded-4 mb-4">
+                        <div class="venue-badge bg-success">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Đang trống
+                        </div>
+                    </div>
+
+                    <div class="venue-content">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3>Phòng Hội Nghị Grand</h3>
+                            <span class="badge bg-primary rounded-pill">Cao cấp</span>
+                        </div>
+
+                        <div class="venue-address text-muted mb-3">
+                            <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                            <span>Tầng 2, Khu A - Tòa nhà Center Building</span>
+
+                        </div>
+
+                        <p class="venue-description">
+                            Phòng Hội Nghị Grand là không gian lý tưởng cho các cuộc họp quy mô lớn, hội thảo khách hàng hoặc ký kết hợp đồng quan trọng.
+                            Được thiết kế với phong cách hiện đại, cách âm tuyệt đối và hệ thống ánh sáng tùy chỉnh theo ngữ cảnh.
+                        </p>
+
+                        <h5 class="mt-4 mb-3">Tiện nghi có sẵn:</h5>
+                        <div class="venue-features row g-3">
+                            <div class="col-6 feature-item d-flex align-items-center">
+                                <i class="bi bi-people fs-4 text-primary me-3"></i>
+                                <div>
+                                    <span class="d-block fw-bold">Sức chứa</span>
+                                    <span class="text-muted small">50 - 100 người</span>
+                                </div>
+                            </div>
+                            <div class="col-6 feature-item d-flex align-items-center">
+                                <i class="bi bi-wifi fs-4 text-primary me-3"></i>
+                                <div>
+                                    <span class="d-block fw-bold">Kết nối</span>
+                                    <span class="text-muted small">Wifi 6 & LAN 1Gbps</span>
+                                </div>
+                            </div>
+                            <div class="col-6 feature-item d-flex align-items-center">
+                                <i class="bi bi-projector fs-4 text-primary me-3"></i>
+                                <div>
+                                    <span class="d-block fw-bold">Trình chiếu</span>
+                                    <span class="text-muted small">Màn hình LED 200 inch</span>
+                                </div>
+                            </div>
+                            <div class="col-6 feature-item d-flex align-items-center">
+                                <i class="bi bi-snow fs-4 text-primary me-3"></i>
+                                <div>
+                                    <span class="d-block fw-bold">Tiện ích</span>
+                                    <span class="text-muted small">Điều hòa & Bảng từ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="directions-section h-100" data-aos="fade-left" data-aos-delay="200">
+
+                    <div class="card shadow border-0 rounded-4">
+                        <div class="card-header bg-primary text-white p-4 rounded-top-4">
+                            <h4 class="mb-0 text-white"><i class="bi bi-calendar-check me-2"></i>Đặt phòng ngay</h4>
+                        </div>
+                        <div class="card-body p-4">
+
+                            <form method="post">
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Ngày sử dụng</label>
+                                    <label>
+                                        <input type="date" class="form-control" name="bookingDate" required>
+                                    </label>
+                                </div>
+
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Giờ bắt đầu</label>
+                                        <label>
+                                            <input type="time" class="form-control" name="startTime" required>
+                                        </label>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Giờ kết thúc</label>
+                                        <label>
+                                            <input type="time" class="form-control" name="endTime" required>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Chủ đề cuộc họp</label>
+                                    <label>
+                                        <input type="text" class="form-control" placeholder="VD: Họp báo cáo quý..." name="title">
+                                    </label>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Yêu cầu thêm</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="teaBreak">
+                                        <label class="form-check-label" for="teaBreak">Chuẩn bị Tea-break</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="support">
+                                        <label class="form-check-label" for="support">Hỗ trợ kỹ thuật IT</label>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg py-3">Xác nhận đặt phòng</button>
+                                    <button type="button" class="btn btn-outline-secondary">
+                                        <i class="bi bi-heart me-1"></i> Lưu vào yêu thích
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="card-footer bg-light p-3 text-center small text-muted rounded-bottom-4">
+                            *Vui lòng hủy trước 30 phút nếu thay đổi kế hoạch.
+                        </div>
+                    </div>
+
+                    <div class="travel-options mt-4 p-4 bg-light rounded-4">
+                        <h4>Quy định phòng</h4>
+
+                        <div class="travel-item mb-3">
+                            <div class="travel-icon text-warning">
+                                <i class="bi bi-trash"></i>
+                            </div>
+                            <div class="travel-info">
+                                <h5>Vệ sinh</h5>
+                                <p class="mb-0 small">Dọn dẹp rác và ghế ngồi sau khi họp.</p>
+                            </div>
+                        </div>
+
+                        <div class="travel-item">
+                            <div class="travel-icon text-danger">
+                                <i class="bi bi-power"></i>
+                            </div>
+                            <div class="travel-info">
+                                <h5>Thiết bị</h5>
+                                <p class="mb-0 small">Tắt máy chiếu và đèn khi rời phòng.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="accommodation-section mt-5" data-aos="fade-up" data-aos-delay="300">
+            <div class="section-header border-top pt-5">
+                <h4>Các phòng tương tự</h4>
+                <p>Gợi ý các phòng họp khác cùng kích thước hoặc vị trí</p>
+            </div>
+
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="hotel-card p-3 border rounded-4 h-100" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="hotel-rating text-warning mb-2">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <h5 class="mb-1">Hội trường A</h5>
+                        <div class="hotel-distance text-muted small mb-2">
+                            <i class="bi bi-geo-alt"></i> Tầng 1
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="badge bg-light text-dark border">150 người</span>
+                            <a href="#" class="btn btn-sm btn-outline-primary rounded-pill">Xem ngay</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="hotel-card p-3 border rounded-4 h-100" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="hotel-rating text-warning mb-2">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <h5 class="mb-1">Phòng Đào Tạo 01</h5>
+                        <div class="hotel-distance text-muted small mb-2">
+                            <i class="bi bi-geo-alt"></i> Tầng 3
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="badge bg-light text-dark border">40 người</span>
+                            <a href="#" class="btn btn-sm btn-outline-primary rounded-pill">Xem ngay</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="hotel-card p-3 border rounded-4 h-100" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="hotel-rating text-warning mb-2">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <h5 class="mb-1">Phòng Brainstorm</h5>
+                        <div class="hotel-distance text-muted small mb-2">
+                            <i class="bi bi-geo-alt"></i> Khu B
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="badge bg-light text-dark border">15 người</span>
+                            <a href="#" class="btn btn-sm btn-outline-primary rounded-pill">Xem ngay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{layouts/footer :: footer}"></div>
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<div id="preloader"></div>
+
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/php-email-form/validate.js}"></script>
+<script th:src="@{/assets/vendor/aos/aos.js}"></script>
+<script th:src="@{/assets/vendor/purecounter/purecounter_vanilla.js}"></script>
+<script th:src="@{/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/assets/vendor/isotope-layout/isotope.pkgd.min.js}"></script>
+<script th:src="@{/assets/vendor/swiper/swiper-bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+
+<script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>
