@@ -51,20 +51,34 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(csrf -> csrf.disable()) // tạm disable cho nhanh; khi chạy form POST nhiều thì cân nhắc bật lại
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
+                        // static
+                        .requestMatchers("/assets/**", "/css/**", "/js/**", "/img/**", "/webjars/**").permitAll()
+
+                        // thymeleaf pages public
+                        .requestMatchers("/", "/users/login", "/users/register", "/admin/login", "/admin/register").permitAll()
+
+                        // api auth public
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/auth/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+                        // role pages
+//                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
+                        .requestMatchers("/users/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
+
+                        // api secured
+                        .requestMatchers("/api/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-        ;
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
 }

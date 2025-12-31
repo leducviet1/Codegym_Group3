@@ -19,11 +19,13 @@ import java.util.Set;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -48,8 +50,6 @@ public class UserService {
 
         return userRepository.save(user);
     }
-
-
 
     public String verify(Users user) {
         Authentication authentication =

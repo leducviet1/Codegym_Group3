@@ -2,22 +2,23 @@ package com.example.bookingmeeting_be.services;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
 public class JWTFilter extends OncePerRequestFilter {
+
+    private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
 
     @Autowired
     private JWTService jwtService;
@@ -28,7 +29,22 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.equals("/api/auth/register") || path.equals("/api/auth/login");
+
+        // view login pages + submit login
+        if (path.equals("/users/login") || path.equals("/admin/login")) return true;
+
+        // api auth
+        if (path.equals("/api/auth/register") || path.equals("/api/auth/login")) return true;
+
+        // static
+        return path.startsWith("/css/")
+                || path.startsWith("/js/")
+                || path.startsWith("/assets/")
+                || path.startsWith("/img/")
+                || path.startsWith("/images/")
+                || path.startsWith("/webjars/")
+                || path.equals("/favicon.ico")
+                || path.equals("/error");
     }
 
     @Override
@@ -38,16 +54,21 @@ public class JWTFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        // 1) Lấy token từ cookie trước (cho Thymeleaf web)
+        String token = extractTokenFromCookie(request, ACCESS_TOKEN_COOKIE);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // 2) Nếu không có cookie thì fallback sang header (cho API clients)
+        if (token == null) {
+            token = extractTokenFromHeader(request);
+        }
+
+        // Không có token => cho qua
+        if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7);
         String username;
-
         try {
             username = jwtService.extractUserName(token);
         } catch (Exception e) {
@@ -55,10 +76,9 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails =
-                    userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtService.validateToken(token, userDetails)) {
 
@@ -78,5 +98,26 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String extractTokenFromHeader(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null) return null;
+        if (!authHeader.startsWith("Bearer ")) return null;
+        return authHeader.substring(7);
+    }
+
+    private String extractTokenFromCookie(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) return null;
+
+        for (Cookie c : cookies) {
+            if (cookieName.equals(c.getName())) {
+                String value = c.getValue();
+                if (value == null || value.isBlank()) return null;
+                return value;
+            }
+        }
+        return null;
     }
 }
