@@ -6,6 +6,10 @@ import com.example.bookingmeeting_be.repository.RoleRepository;
 import com.example.bookingmeeting_be.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+
 
 @Service
 public class UserService {
@@ -58,5 +63,12 @@ public class UserService {
             return jwtService.generateToken(user.getEmail());
         }
         throw new RuntimeException("Login failed");
+    }
+    public Page<Users> listUsers(String q, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        if(q == null || q.isEmpty()) {
+            return userRepository.findAll(pageable);
+        }
+        return userRepository.findByEmailContainingIgnoreCase(q,q, pageable);
     }
 }
