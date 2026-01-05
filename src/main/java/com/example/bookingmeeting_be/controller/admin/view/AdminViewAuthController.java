@@ -22,7 +22,11 @@ public class AdminViewAuthController {
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
-
+    @GetMapping("/login")
+    public String login()
+    {
+        return "auth/admin-login";
+    }
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, HttpServletResponse response, Model model) {
         try {

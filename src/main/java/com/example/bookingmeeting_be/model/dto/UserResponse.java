@@ -3,19 +3,18 @@ package com.example.bookingmeeting_be.model.dto;
 import java.time.LocalDateTime;
 
 public class UserResponse {
-    private Integer userId;
+    private int userId;
     private String fullname;
     private String email;
-    private String password;
     private String department;
     private String role;
     private LocalDateTime createdAt;
 
-    public Integer getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -33,14 +32,6 @@ public class UserResponse {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getDepartment() {

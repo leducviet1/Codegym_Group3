@@ -11,7 +11,7 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Integer userId;
+    private int userId;
 
     @Column(nullable = false, length = 100)
     private String fullname;
@@ -78,6 +78,9 @@ public class Users {
 
     public Department getDepartment() {
         return department;
+    }
+    public String getDepartmentname(){
+        return department == null ? "" : department.getDepartmentName();
     }
 
     public void setDepartment(Department department) {
