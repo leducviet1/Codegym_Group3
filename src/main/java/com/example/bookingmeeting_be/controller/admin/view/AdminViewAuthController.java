@@ -28,23 +28,25 @@ public class AdminViewAuthController {
         return "auth/admin-login";
     }
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, HttpServletResponse response, Model model) {
+    public String login(@RequestParam String username,
+                        @RequestParam String password,
+                        HttpServletResponse response,
+                        Model model) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             String jwt = jwtService.generateToken(username);
             ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, jwt).httpOnly(true).secure(false).path("/").sameSite("Lax").maxAge(60 * 60).build();
             response.addHeader("Set-Cookie", cookie.toString());
-            return "redirect:/users/home";
+            return "redirect:/admin/home";
         } catch (AuthenticationException ex) {
             model.addAttribute("error", "Sai tài khoản hoặc mật khẩu");
-            return "/auth/admin-login";
+            return "auth/admin-login";
         }
     }
-
     @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, "").httpOnly(true).secure(false).path("/").sameSite("Lax").maxAge(0).build();
         response.addHeader("Set-Cookie", cookie.toString());
-        return "redirect:/login";
+        return "redirect:/admin/login";
     }
 }
