@@ -1,24 +1,26 @@
-package com.example.bookingmeeting_be.controller.admin;
+package com.example.bookingmeeting_be.controller.admin.view;
 
-import com.example.bookingmeeting_be.repository.UserRepository;
+import com.example.bookingmeeting_be.model.dto.UserResponse;
 import com.example.bookingmeeting_be.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+@RequestMapping("/admin")
 @Controller
 public class AdminUsersController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/admin-users")
+    @GetMapping("/users")
     public String listUsers(@RequestParam(required = false) String q,
                             @RequestParam(defaultValue = "0") int page,
                             @RequestParam(defaultValue = "10") int size,
                             Model model) {
-        var userPage = userService.listUsers(q, page, size);
+        Page<UserResponse> userPage = userService.listUsers(q, page, size);
         model.addAttribute("userPage", userPage);
         model.addAttribute("q",q);
         model.addAttribute("page",page);

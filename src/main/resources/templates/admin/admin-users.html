@@ -6,10 +6,24 @@
     <title>Quản lý người dùng</title>
     <div th:replace="~{layouts/admin-head :: admin-head}"></div>
     <style>
-        .modal-header { background-color: #f8f9fa; border-bottom: 2px solid #dee2e6; }
-        .form-label { font-weight: 600; }
-        .badge-admin { background-color: #0d6efd; color: white; }
-        .badge-user { background-color: #6c757d; color: white; }
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .form-label {
+            font-weight: 600;
+        }
+
+        .badge-admin {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .badge-user {
+            background-color: #6c757d;
+            color: white;
+        }
     </style>
 </head>
 
@@ -37,7 +51,8 @@
 
                         <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
                             <h5 class="card-title mb-0">Danh sách người dùng</h5>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openModal('add')">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal"
+                                    onclick="openModal('add')">
                                 <i class="bi bi-plus-circle"></i> Thêm người dùng
                             </button>
                         </div>
@@ -49,38 +64,32 @@
                                     <th width="50">#</th>
                                     <th>Tên</th>
                                     <th>Email</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Vai trò</th> <th width="180">Hành động</th>
+                                    <th>Vai trò</th>
+                                    <th width="180">Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Nguyễn Văn A</td>
-                                    <td>admin@gmail.com</td>
-                                    <td>0123456789</td>
-                                    <td><span class="badge badge-admin">ADMIN</span></td>
+                                <tr th:each="u : ${userPage.content}">
+                                    <td th:text="${u.userId}"></td>
+                                    <td th:text="${u.fullname ?: 'NULL'}"></td>
+                                    <td th:text="${u.email ?: 'NULL'}"></td>
+                                    <!--        <td th:text="${u.department ?: 'NULL'}"></td>-->
+<!--                                    <td th:text="${u.role ?: 'NULL'}"></td>-->
                                     <td>
-                                        <button class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openModal('edit', this)">
-                                            <i class="bi bi-pencil"></i> Sửa
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" onclick="confirmDelete(1)">
-                                            <i class="bi bi-trash"></i> Xóa
-                                        </button>
+                                        <span class="badge badge-admin" th:if="${u.role == 'ADMIN'}">ADMIN</span>
+                                        <span class="badge badge-user"  th:if="${u.role == 'USER'}">USER</span>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Trần Thị B</td>
-                                    <td>user@gmail.com</td>
-                                    <td>0987654321</td>
-                                    <td><span class="badge badge-user">USER</span></td>
                                     <td>
-                                        <button class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openModal('edit', this)">
-                                            <i class="bi bi-pencil"></i> Sửa
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" onclick="confirmDelete(2)">
-                                            <i class="bi bi-trash"></i> Xóa
+                                        <button class="btn btn-sm btn-warning me-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#userModal"
+                                                onclick="openModal('edit', this)"
+                                                th:attr="data-id=${u.userId},
+                                                data-name=${u.fullname},
+                                                data-email=${u.email},
+                                                data-phone=${u.department},
+                                                data-role=${u.role}">
+                                            Sửa
                                         </button>
                                     </td>
                                 </tr>
@@ -124,10 +133,10 @@
                         <div class="col-md-6">
                             <label class="form-label">Vai trò</label>
                             <label for="role"></label><select class="form-select" id="role" required>
-                                <option value="" selected disabled>Chọn vai trò...</option>
-                                <option value="ADMIN">ADMIN (Quản trị viên)</option>
-                                <option value="USER">USER (Người dùng)</option>
-                            </select>
+                            <option value="" selected disabled>Chọn vai trò...</option>
+                            <option value="ADMIN">ADMIN (Quản trị viên)</option>
+                            <option value="USER">USER (Người dùng)</option>
+                        </select>
                         </div>
                     </div>
                 </div>
@@ -158,16 +167,16 @@
             const cells = row.cells;
 
             document.getElementById('userId').value = cells[0].innerText;
-            document.getElementById('name').value   = cells[1].innerText;
-            document.getElementById('email').value  = cells[2].innerText;
-            document.getElementById('phone').value  = cells[3].innerText;
+            document.getElementById('name').value = cells[1].innerText;
+            document.getElementById('email').value = cells[2].innerText;
+            document.getElementById('phone').value = cells[3].innerText;
 
             const roleText = cells[4].innerText.trim();
             document.getElementById('role').value = roleText;
         }
     }
 
-    document.getElementById('userForm').addEventListener('submit', function(e) {
+    document.getElementById('userForm').addEventListener('submit', function (e) {
         e.preventDefault();
         const id = document.getElementById('userId').value;
         const name = document.getElementById('name').value;
@@ -178,7 +187,7 @@
     });
 
     function confirmDelete(id) {
-        if(confirm("Xác nhận xóa người dùng này?")) {
+        if (confirm("Xác nhận xóa người dùng này?")) {
             alert("Đã xóa ID: " + id);
         }
     }
@@ -186,3 +195,6 @@
 
 </body>
 </html>
+
+
+

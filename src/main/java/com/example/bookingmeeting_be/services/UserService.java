@@ -2,9 +2,11 @@ package com.example.bookingmeeting_be.services;
 
 import com.example.bookingmeeting_be.model.Role;
 import com.example.bookingmeeting_be.model.Users;
+import com.example.bookingmeeting_be.model.dto.UserResponse;
 import com.example.bookingmeeting_be.repository.RoleRepository;
 import com.example.bookingmeeting_be.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,11 +66,24 @@ public class UserService {
         }
         throw new RuntimeException("Login failed");
     }
-    public Page<Users> listUsers(String q, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        if(q == null || q.isEmpty()) {
-            return userRepository.findAll(pageable);
-        }
-        return userRepository.findByEmailContainingIgnoreCase(q,q, pageable);
+    @Transactional
+    public Page<UserResponse> listUsers(String q, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("userId").descending());
+        Page<Users> usersPage = (q == null || q.isBlank())
+                ? userRepository.findAll(pageable)
+                : userRepository.findByEmailContainingIgnoreCaseOrFullnameContainingIgnoreCase(q, q, pageable);
+        return usersPage.map(this::toDto);
+    }
+    private UserResponse toDto(Users user) {
+        UserResponse dto = new UserResponse();
+        dto.setUserId(user.getUserId());
+        dto.setEmail(user.getEmail());
+        dto.setFullname(user.getFullname());
+
+        boolean isAdmin = user.getRole() != null && user.getRole().stream()
+                .anyMatch(r -> "ROLE_ADMIN".equals(r.getName()));
+
+        dto.setRole(isAdmin ? "ADMIN" : "USER");
+        return dto;
     }
 }
