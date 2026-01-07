@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -80,11 +81,16 @@ public class UserService {
         dto.setUserId(user.getUserId());
         dto.setEmail(user.getEmail());
         dto.setFullname(user.getFullname());
+        var roleNames = user.getRole() == null
+                ? List.<String>of()
+                : user.getRole().stream().map(Role::getName).toList();
+        dto.setRoles(roleNames);
+        dto.setRolesText(String.join(",", roleNames));
 
-        boolean isAdmin = user.getRole() != null && user.getRole().stream()
-                .anyMatch(r -> "ROLE_ADMIN".equals(r.getName()));
-
-        dto.setRole(isAdmin ? "ADMIN" : "USER");
+//        boolean isAdmin = user.getRole() != null && user.getRole().stream()
+//                .anyMatch(r -> "ROLE_ADMIN".equals(r.getName()));
+//
+//        dto.setRole(isAdmin ? "ADMIN" : "USER");
         return dto;
     }
     //Update Role user

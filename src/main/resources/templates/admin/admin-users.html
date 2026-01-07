@@ -93,11 +93,10 @@
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#userModal"
                                                 onclick="openModal('edit', this)"
-                                                th:attr="data-id=${u.userId},
-                                                data-name=${u.fullname},
-                                                data-email=${u.email},
-                                                data-phone=${u.department},
-                                                data-role=${u.role}">
+                                                th:data-id="${u.userId}"
+                                                th:data-name="${u.fullname}"
+                                                th:data-email="${u.email}"
+                                                th:data-roles="${u.rolesText}">
                                             Sửa
                                         </button>
                                     </td>
@@ -139,12 +138,26 @@
                             <label class="form-label">Số điện thoại</label>
                             <label for="phone"></label><input type="tel" class="form-control" id="phone" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label class="form-label">Vai trò</label>
-                            <label for="role"></label><select class="form-select" id="role" required>
-                            <option value="" selected disabled>Chọn vai trò...</option>
-                            <option value="ADMIN">ADMIN (Quản trị viên)</option>
-                            <option value="USER">USER (Người dùng)</option>
+<!--                            <label for="role"></label><select class="form-select" id="role" required>-->
+<!--                            <option value="" selected disabled>Chọn vai trò...</option>-->
+<!--                            <option value="ADMIN">ADMIN (Quản trị viên)</option>-->
+<!--                            <option value="USER">USER (Người dùng)</option>-->
+                            <div class="d-flex gap-3 flex-wrap">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" name="roles" value="ROLE_ADMIN" id="roleAdmin">
+                                    ADMIN (Quản trị viên)
+                                </label>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" name="roles" value="ROLE_BOOKER" id="roleBooker">
+                                    BOOKER
+                                </label>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" name="roles" value="ROLE_ATTENDEE" id="roleAttendee">
+                                    ATTENDEE
+                                </label>
+                            </div>
                         </select>
                         </div>
                     </div>
