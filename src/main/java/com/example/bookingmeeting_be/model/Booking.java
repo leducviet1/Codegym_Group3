@@ -28,6 +28,9 @@ public class Booking {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "status")
     private String status;
 }

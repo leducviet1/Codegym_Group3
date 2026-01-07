@@ -11,6 +11,7 @@ public class BookingRequest {
     private Integer hostUserId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String description;
 
     private List<DeviceRequest> devices;
 
