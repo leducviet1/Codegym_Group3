@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class AdminDepartmentController {
-    @GetMapping("/admin-department")
+    @GetMapping("/admin/admin-department")
     public String phongHop(){
         return "admin/admin-department";
     }
