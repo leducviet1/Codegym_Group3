@@ -1,4 +1,4 @@
-package com.example.bookingmeeting_be.controller.admin;
+package com.example.bookingmeeting_be.controller.admin.view;
 
 import com.example.bookingmeeting_be.model.MeetingRoom;
 import com.example.bookingmeeting_be.services.MeetingRoomService;

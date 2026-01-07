@@ -74,11 +74,20 @@
                                     <td th:text="${u.fullname ?: 'NULL'}"></td>
                                     <td th:text="${u.email ?: 'NULL'}"></td>
                                     <!--        <td th:text="${u.department ?: 'NULL'}"></td>-->
-<!--                                    <td th:text="${u.role ?: 'NULL'}"></td>-->
+                                    <!--                                    <td th:text="${u.role ?: 'NULL'}"></td>-->
+                                    <!--                                    <td>-->
+                                    <!--                                        <span class="badge badge-admin" th:if="${u.role == 'ADMIN'}">ADMIN</span>-->
+                                    <!--                                        <span class="badge badge-user"  th:if="${u.role == 'USER'}">USER</span>-->
+                                    <!--                                        <span class="badge badge-user"  th:if="${u.role == 'ATTENDEE'}">ATENDEE</span>-->
+                                    <!--                                    </td>-->
                                     <td>
-                                        <span class="badge badge-admin" th:if="${u.role == 'ADMIN'}">ADMIN</span>
-                                        <span class="badge badge-user"  th:if="${u.role == 'USER'}">USER</span>
+  <span th:each="r : ${u.role}"
+        th:text="${r.name}"
+        class="badge me-1"
+        th:classappend="${r.name == 'ROLE_ADMIN' ? 'badge-admin' : 'badge-user'}">
+  </span>
                                     </td>
+
                                     <td>
                                         <button class="btn btn-sm btn-warning me-1"
                                                 data-bs-toggle="modal"
@@ -113,7 +122,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form id="userForm">
+            <form id="userForm" method="post">
                 <div class="modal-body">
                     <div class="row g-3">
                         <input type="hidden" id="userId" name="id">
