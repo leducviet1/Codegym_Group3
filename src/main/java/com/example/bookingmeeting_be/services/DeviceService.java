@@ -30,4 +30,8 @@ public class DeviceService {
         d.setQuantity(d.getQuantity() + delta);
         repository.save(d);
     }
+
+    public List<Device> getAvailableDevices() {
+        return repository.findByStatusAndQuantityGreaterThan("Available", 0);
+    }
 }

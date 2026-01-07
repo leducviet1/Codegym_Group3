@@ -33,5 +33,10 @@ public class DeviceController {
     public void updateQuantity(@PathVariable int id, @RequestParam int delta) {
         service.updateQuantity(id, delta);
     }
+
+    @GetMapping("/available")
+    public List<Device> getAvailable() {
+        return service.getAvailableDevices();
+    }
 }
 
