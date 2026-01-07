@@ -31,6 +31,10 @@ public class DeviceService {
         repository.save(d);
     }
 
+    public Device getById(int id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thiết bị với ID: " + id));
+    }
     public List<Device> getAvailableDevices() {
         return repository.findByStatusAndQuantityGreaterThan("Available", 0);
     }
