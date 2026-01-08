@@ -20,9 +20,9 @@ public class Users {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "depart_id")
-    private Department department;
+//    @ManyToOne
+//    @JoinColumn(name = "depart_id")
+//    private Department department;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
@@ -76,16 +76,16 @@ public class Users {
         this.password = password;
     }
 
-    public Department getDepartment() {
-        return department;
-    }
-    public String getDepartmentname(){
-        return department == null ? "" : department.getDepartmentName();
-    }
+//    public Department getDepartment() {
+//        return department;
+//    }
+//    public String getDepartmentname(){
+//        return department == null ? "" : department.getDepartmentName();
+//    }
 
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
+//    public void setDepartment(Department department) {
+//        this.department = department;
+//    }
 
     public Set<Role> getRole() {
         return role;

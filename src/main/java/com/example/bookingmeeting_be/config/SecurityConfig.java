@@ -66,8 +66,8 @@ public class SecurityConfig {
 
                         // role pages
 //                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-                        .requestMatchers("/users/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
+                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_BOOKER","ROLE_ATTENDEE")
+                        .requestMatchers("/users/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_BOOKER","ROLE_ATTENDEE")
 
                         // api secured
                         .requestMatchers("/api/**").authenticated()

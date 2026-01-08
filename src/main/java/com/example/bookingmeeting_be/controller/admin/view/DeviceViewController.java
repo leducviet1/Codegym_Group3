@@ -58,6 +58,12 @@ public class DeviceViewController {
     @GetMapping("/available")
     public List<Device> getAvailable() {
         return deviceService.getAvailableDevices();
-}
     }
+}
+
+
+
+
+
+
 

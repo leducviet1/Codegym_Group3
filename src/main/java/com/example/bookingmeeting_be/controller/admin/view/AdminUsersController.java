@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
+import java.util.List;
+
 @RequestMapping("/admin")
 @Controller
 public class AdminUsersController {
@@ -26,5 +28,11 @@ public class AdminUsersController {
         model.addAttribute("page",page);
         model.addAttribute("size",size);
         return "admin/admin-users";
+    }
+    @PostMapping("/users/{id}/roles")
+    public String updateRoles(@PathVariable int id,
+                              @RequestParam List<String> roles){
+        userService.updateRolesUser(id, new HashSet<>(roles));
+        return "redirect:/admin/users";
     }
 }
