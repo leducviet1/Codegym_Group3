@@ -21,12 +21,12 @@
 <div class="msg" th:if="${success}" th:text="${success}"></div>
 
 <div class="row" style="margin-bottom:10px;">
-    <a th:href="@{/devices/view}">Tất cả</a>
-    <a th:href="@{/devices/view/available}">Chỉ Available</a>
+    <a th:href="@{/admin/devices}">Tất cả</a>
+    <a th:href="@{/admin/devices/available}">Chỉ Available</a>
 </div>
 
 <h3>Thêm thiết bị</h3>
-<form th:action="@{/devices/view/add}" th:object="${device}" method="post" class="row">
+<form th:action="@{/admin/devices/add}" th:object="${device}" method="post" class="row">
     <input th:field="*{name}" placeholder="Tên thiết bị" required />
     <input th:field="*{type}" placeholder="Type (vd: PROJECTOR)" />
     <input th:field="*{status}" placeholder="Status (Available/Unavailable)" />
@@ -53,8 +53,8 @@
         <td th:text="${d.status}"></td>
         <td th:text="${d.quantity}"></td>
         <td>
-            <a th:href="@{/devices/view/edit/{id}(id=${d.id})}">Sửa</a>
-            <a th:href="@{/devices/view/delete/{id}(id=${d.id})}"
+            <a th:href="@{/admin/devices/edit/{id}(id=${d.id})}">Sửa</a>
+            <a th:href="@{/admin/   devices/delete/{id}(id=${d.id})}"
                onclick="return confirm('Xóa thiết bị này?')">Xóa</a>
         </td>
     </tr>

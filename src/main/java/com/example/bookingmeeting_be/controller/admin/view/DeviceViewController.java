@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("admin/devices")
+@RequestMapping("/admin/devices")
 public class DeviceViewController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class DeviceViewController {
     public String addDevice(@ModelAttribute Device device, RedirectAttributes redirectAttributes) {
         deviceService.create(device);
         redirectAttributes.addFlashAttribute("success", "Thêm thiết bị thành công!");
-        return "redirect:admin/devices/";
+        return "redirect:/admin/devices";
     }
 
 
@@ -40,7 +40,7 @@ public class DeviceViewController {
         return "device-edit";
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/edit/{id}")
     public String updateDevice(@PathVariable int id, @ModelAttribute Device device,
                                RedirectAttributes redirectAttributes) {
         deviceService.update(id, device);
