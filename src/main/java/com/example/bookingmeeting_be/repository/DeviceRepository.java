@@ -10,5 +10,6 @@ import java.util.List;
 public interface DeviceRepository extends JpaRepository<Device, Integer> {
     List<Device> findByType(String type);
     List<Device> findByStatus(String status);
+    List<Device> findByStatusAndQuantityGreaterThan(String status, int quantity);
 }
 

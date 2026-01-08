@@ -81,9 +81,9 @@ public class UserService {
         dto.setUserId(user.getUserId());
         dto.setEmail(user.getEmail());
         dto.setFullname(user.getFullname());
-        var roleNames = user.getRole() == null
-                ? List.<String>of()
+        var roleNames = (user.getRole() == null) ? java.util.List.<String>of()
                 : user.getRole().stream().map(Role::getName).toList();
+
         dto.setRoles(roleNames);
         dto.setRolesText(String.join(",", roleNames));
 
