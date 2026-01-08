@@ -56,13 +56,13 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         // static
-                        .requestMatchers("/assets/**", "/css/**", "/js/**", "/img/**", "/webjars/**").permitAll()
+                        .requestMatchers("/assets/**", "/css/**", "/js/**", "/img/**", "/webjars/**", "/test-booking.html").permitAll()
 
                         // thymeleaf pages public
                         .requestMatchers("/", "/users/login", "/users/register", "/admin/login", "/admin/register").permitAll()
 
                         // api auth public
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/register", "/api/auth/login", "/api/devices/**", "/api/bookings/**").permitAll()
 
                         // role pages
 //                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
