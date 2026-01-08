@@ -138,8 +138,6 @@
         <div class="left-actions">
             <button class="btn primary" type="button" onclick="openAdd()">+ Thêm thiết bị</button>
             <a class="btn" th:href="@{/admin/devices}">Tất cả</a>
-            <!-- Nếu /available của bạn đang trả JSON thì link này sẽ không render list được.
-                 Bạn có thể bỏ hoặc giữ để test JSON -->
             <a class="btn" th:href="@{/admin/devices/available}" target="_blank">Xem JSON Available</a>
         </div>
         <div class="muted">

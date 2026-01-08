@@ -45,14 +45,14 @@ public class DeviceViewController {
                                RedirectAttributes redirectAttributes) {
         deviceService.update(id, device);
         redirectAttributes.addFlashAttribute("success", "Cập nhật thiết bị thành công!");
-        return "redirect:/devices/view";
+        return "redirect:/admin/devices";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteDevice(@PathVariable int id, RedirectAttributes redirectAttributes) {
         deviceService.delete(id);
         redirectAttributes.addFlashAttribute("success", "Xóa thiết bị thành công!");
-        return "redirect:/devices/view";
+        return "redirect:/admin/devices";
 
     }
     @GetMapping("/available")
