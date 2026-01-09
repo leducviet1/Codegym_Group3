@@ -157,7 +157,6 @@
                    th:value="${_csrf.token}" />
 
 
-            <!-- id để JS set (không bắt buộc submit, vì edit dùng path /edit/{id}) -->
             <input type="hidden" id="deviceId" th:field="*{id}" />
 
             <div class="form-grid">
@@ -222,7 +221,6 @@
                     data-qty=${d.quantity}"
                    onclick="openEdit(this)">Sửa</a>
 
-                <!-- Xóa: gọi controller GET /admin/devices/delete/{id} -->
                 <a class="btn danger"
                    th:href="@{/admin/devices/delete/{id}(id=${d.id})}"
                    onclick="return confirm('Xóa thiết bị này?')">Xóa</a>
