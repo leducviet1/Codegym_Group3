@@ -1,4 +1,4 @@
-package com.example.bookingmeeting_be.controller.admin;
+package com.example.bookingmeeting_be.controller.admin.api;
 
 import com.example.bookingmeeting_be.model.Device;
 import com.example.bookingmeeting_be.repository.DeviceRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/devices")
 @CrossOrigin(origins = "*")
-public class DeviceController {
+public class DeviceApiController {
 
     @Autowired
     private DeviceRepository deviceRepository;

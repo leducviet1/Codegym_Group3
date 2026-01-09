@@ -1,4 +1,4 @@
-package com.example.bookingmeeting_be.controller.admin;
+package com.example.bookingmeeting_be.controller.admin.api;
 
 import com.example.bookingmeeting_be.model.dto.BookingRequest;
 import com.example.bookingmeeting_be.model.Booking;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/bookings")
 @CrossOrigin(origins = "*")
-public class BookingController {
+public class BookingApiController {
 
     @Autowired
     private BookingService bookingService;
