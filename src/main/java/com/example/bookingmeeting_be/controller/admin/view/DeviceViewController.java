@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/devices/view")
+@RequestMapping("/admin/devices")
 public class DeviceViewController {
 
     @Autowired
@@ -21,14 +21,15 @@ public class DeviceViewController {
     public String listDevices(Model model) {
         List<Device> devices = deviceService.getAll();
         model.addAttribute("devices", devices);
-        return "device-list";
+        model.addAttribute("device", new Device());
+        return "admin/device-list";
     }
 
     @PostMapping("/add")
     public String addDevice(@ModelAttribute Device device, RedirectAttributes redirectAttributes) {
         deviceService.create(device);
         redirectAttributes.addFlashAttribute("success", "Thêm thiết bị thành công!");
-        return "redirect:/devices/view";
+        return "redirect:/admin/devices";
     }
 
 
@@ -39,24 +40,23 @@ public class DeviceViewController {
         return "device-edit";
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/edit/{id}")
     public String updateDevice(@PathVariable int id, @ModelAttribute Device device,
                                RedirectAttributes redirectAttributes) {
         deviceService.update(id, device);
         redirectAttributes.addFlashAttribute("success", "Cập nhật thiết bị thành công!");
-        return "redirect:/devices/view";
+        return "redirect:/admin/devices";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteDevice(@PathVariable int id, RedirectAttributes redirectAttributes) {
         deviceService.delete(id);
         redirectAttributes.addFlashAttribute("success", "Xóa thiết bị thành công!");
-        return "redirect:/devices/view";
+        return "redirect:/admin/devices";
 
     }
     @GetMapping("/available")
     public List<Device> getAvailable() {
         return deviceService.getAvailableDevices();
-}
     }
-
+}

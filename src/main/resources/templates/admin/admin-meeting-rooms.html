@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -10,6 +11,12 @@
         .form-label { font-weight: 600; }
         .badge-active { background-color: #198754; color: white; }
         .badge-inactive { background-color: #6c757d; color: white; }
+
+        /* ✅ MỚI: style danh sách thiết bị trong bảng */
+        .asset-list { margin: 0; padding-left: 16px; }
+        .asset-list li { margin: 2px 0; }
+        .asset-empty { color: #6c757d; font-style: italic; }
+        .asset-badge { display:inline-block; padding:2px 8px; border-radius: 999px; background:#eef2ff; }
     </style>
 </head>
 
@@ -58,6 +65,10 @@
                                     <th>Sức Chứa</th>
                                     <th>Tính Năng</th>
                                     <th>Trạng Thái</th>
+
+                                    <!-- ✅ MỚI: cột thiết bị -->
+                                    <th width="280">Thiết bị (RoomAsset)</th>
+
                                     <th width="150">Hành Động</th>
                                 </tr>
                                 </thead>
@@ -75,6 +86,36 @@
                                         <span th:if="${room.status == 'ACTIVE'}" class="badge badge-active">Hoạt Động</span>
                                         <span th:if="${room.status != 'ACTIVE'}" class="badge badge-inactive">Không Hoạt Động</span>
                                     </td>
+
+                                    <!-- ✅ MỚI: render roomAssets -->
+                                    <td>
+                                        <!-- Nếu chưa có asset -->
+                                        <div th:if="${room.roomAssets == null or #lists.isEmpty(room.roomAssets)}"
+                                             class="asset-empty">
+                                            Chưa có thiết bị
+                                        </div>
+
+                                        <!-- Nếu có asset -->
+                                        <div th:if="${room.roomAssets != null and !#lists.isEmpty(room.roomAssets)}">
+                                            <div class="mb-1">
+                                                <span class="asset-badge">
+                                                    Tổng: <b th:text="${#lists.size(room.roomAssets)}"></b> loại
+                                                </span>
+                                            </div>
+                                            <ul class="asset-list">
+                                                <li th:each="asset : ${room.roomAssets}">
+                                                    <span th:text="${asset.device != null ? asset.device.name : 'N/A'}"></span>
+                                                    —
+                                                    SL: <b th:text="${asset.quantity}"></b>
+                                                    <small class="text-muted"
+                                                           th:if="${asset.device != null and asset.device.type != null}">
+                                                        ( <span th:text="${asset.device.type}"></span> )
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">
                                             <a th:href="@{/admin/meeting-rooms/{id}(id=${room.id})}"
@@ -85,8 +126,14 @@
                                                class="btn btn-warning text-white" title="Chỉnh sửa">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form th:action="@{/admin/meeting-rooms/{id}/delete(id=${room.id})}" method="POST" style="display: inline;"
+
+                                            <!-- ⚠️ Nếu bạn bật CSRF, nhớ thêm input _csrf -->
+                                            <form th:action="@{/admin/meeting-rooms/{id}/delete(id=${room.id})}"
+                                                  method="POST" style="display: inline;"
                                                   onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
+                                                <!-- ✅ MỚI (nếu bật CSRF): -->
+                                                <input type="hidden" th:if="${_csrf != null}"
+                                                       th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                 <button type="submit" class="btn btn-danger text-white" title="Xóa">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
@@ -94,8 +141,9 @@
                                         </div>
                                     </td>
                                 </tr>
+
                                 <tr th:if="${#lists.isEmpty(meetingRooms)}">
-                                    <td colspan="6" class="text-center text-muted py-4">
+                                    <td colspan="7" class="text-center text-muted py-4">
                                         <i class="bi bi-inbox"></i> Không có dữ liệu
                                     </td>
                                 </tr>
@@ -115,6 +163,6 @@
 <div th:replace="~{layouts/admin-footer :: admin-footer}"></div>
 
 </body>
-
 </html>
+
 

@@ -19,7 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -45,10 +47,10 @@ public class UserService {
         }
 
         Role roleUser = roleRepository
-                .findByName("ROLE_USER")
+                .findByName("ROLE_ATTENDEE")
                 .orElseGet(() -> {
                     Role r = new Role();
-                    r.setName("ROLE_USER");
+                    r.setName("ROLE_ATTENDEE");
                     return roleRepository.save(r);
                 });
 
@@ -79,11 +81,28 @@ public class UserService {
         dto.setUserId(user.getUserId());
         dto.setEmail(user.getEmail());
         dto.setFullname(user.getFullname());
+        var roleNames = (user.getRole() == null) ? java.util.List.<String>of()
+                : user.getRole().stream().map(Role::getName).toList();
 
-        boolean isAdmin = user.getRole() != null && user.getRole().stream()
-                .anyMatch(r -> "ROLE_ADMIN".equals(r.getName()));
+        dto.setRoles(roleNames);
+        dto.setRolesText(String.join(",", roleNames));
 
-        dto.setRole(isAdmin ? "ADMIN" : "USER");
+//        boolean isAdmin = user.getRole() != null && user.getRole().stream()
+//                .anyMatch(r -> "ROLE_ADMIN".equals(r.getName()));
+//
+//        dto.setRole(isAdmin ? "ADMIN" : "USER");
         return dto;
+    }
+    //Update Role user
+    @Transactional
+    public void updateRolesUser(int userId,Set<String> roleNames) {
+        Users user = userRepository.findById(userId).orElseThrow();
+        Set<Role> newRoles = roleNames.stream()
+                .map(name -> roleRepository.findByName(name).orElseThrow())
+                .collect(Collectors.toSet());
+
+        user.setRole(newRoles);
+        userRepository.save(user);
+
     }
 }

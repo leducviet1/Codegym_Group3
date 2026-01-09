@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class JWTFilter extends OncePerRequestFilter {
+public class    JWTFilter extends OncePerRequestFilter {
 
     private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
 
@@ -37,7 +37,8 @@ public class JWTFilter extends OncePerRequestFilter {
         if (path.equals("/api/auth/register") || path.equals("/api/auth/login")) return true;
 
         // static
-        return path.startsWith("/css/")
+        return path.startsWith("/admin/assets/")
+                || path.startsWith("/css/")
                 || path.startsWith("/js/")
                 || path.startsWith("/assets/")
                 || path.startsWith("/img/")

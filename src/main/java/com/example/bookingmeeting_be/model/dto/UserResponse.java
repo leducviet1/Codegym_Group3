@@ -1,6 +1,7 @@
 package com.example.bookingmeeting_be.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class UserResponse {
     private int userId;
@@ -9,6 +10,9 @@ public class UserResponse {
     private String department;
     private String role;
     private LocalDateTime createdAt;
+
+    private List<String> roles;
+    private String rolesText;
 
     public int getUserId() {
         return userId;
@@ -50,9 +54,26 @@ public class UserResponse {
         this.role = role;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
+    public String getRolesText() {
+        return rolesText;
+    }
+
+    public void setRolesText(String rolesText) {
+        this.rolesText = rolesText;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
