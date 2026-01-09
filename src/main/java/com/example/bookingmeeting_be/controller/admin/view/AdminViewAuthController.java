@@ -43,7 +43,7 @@ public class AdminViewAuthController {
             return "auth/admin-login";
         }
     }
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public String logout(HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, "").httpOnly(true).secure(false).path("/").sameSite("Lax").maxAge(0).build();
         response.addHeader("Set-Cookie", cookie.toString());
