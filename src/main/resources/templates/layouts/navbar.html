@@ -88,7 +88,11 @@
                         </li>
                     </ul>
                 </div>
-                <a class="btn-getstarted" th:href="@{/users/login}">Đăng nhập</a>
+                <a class="btn-getstarted" th:href="@{/users/login}" sec:authorize="!isAuthenticated()">Đăng nhập</a>
+                <div sec:authorize="isAuthenticated()">
+                    Xin chào,
+                    <span sec:authentication="name"></span>
+                </div>
             </div>
         </div>
     </header>

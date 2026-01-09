@@ -1,4 +1,4 @@
-<div th:fragment="admin-navbar">
+<div th:fragment="admin-navbar"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <header id="header" class="header fixed-top d-flex align-items-center">
 
         <div class="d-flex align-items-center justify-content-between">
@@ -92,13 +92,14 @@
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img th:src="@{/admin/assets/img/profile-img.jpg}" alt="Profile" class="rounded-circle">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">NĐ. Thiệp</span>
+                        <span class="d-none d-md-block dropdown-toggle ps-2"
+                              sec:authentication="name"></span>
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li class="dropdown-header">
-                            <h6>Nguyễn Đình Thiệp</h6>
-                            <span>Web Fullstack</span>
+                            <h6 sec:authentication="name"></h6>
+                            <span>ADMIN</span>
                         </li>
                         <li><hr class="dropdown-divider"></li>
 
@@ -126,11 +127,17 @@
                         </li>
                         <li><hr class="dropdown-divider"></li>
 
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" th:href="@{/logout}">
-                                <i class="bi bi-box-arrow-right"></i>
-                                <span>Đăng xuất</span>
-                            </a>
+                        <li >
+<!--                            <a class="dropdown-item d-flex align-items-center" th:action="@{/logout}">-->
+<!--                                <i class="bi bi-box-arrow-right"></i>-->
+<!--                                <span>Đăng xuất</span>-->
+<!--                            </a>-->
+                            <form th:action="@{/admin/logout}" method="post" class="m-0">
+                                <button class="dropdown-item d-flex align-items-center" type="submit">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Đăng xuất</span>
+                                </button>
+                            </form>
                         </li>
                     </ul>
                 </li>
@@ -138,7 +145,7 @@
             </ul>
         </nav>
     </header>
-
+<!--SIBEBAR-->
     <aside id="sidebar" class="sidebar">
 
         <ul class="sidebar-nav" id="sidebar-nav">
@@ -197,13 +204,13 @@
                     <span>Hồ sơ cá nhân</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
                 <a class="nav-link collapsed" th:href="@{/admin-register}">
                     <i class="bi bi-card-list"></i>
                     <span>Đăng ký</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item"  sec:authorize="!isAuthenticated()">
                 <a class="nav-link collapsed" th:href="@{/admin-login}">
                     <i class="bi bi-box-arrow-in-right"></i>
                     <span>Đăng nhập</span>
