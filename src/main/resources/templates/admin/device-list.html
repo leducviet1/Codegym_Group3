@@ -2,67 +2,217 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8" />
-    <title>Thiết bị</title>
+    <title>Quản lý Thiết bị</title>
     <style>
-        body { font-family: Arial; padding: 16px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background: #f5f5f5; }
-        .row { display:flex; gap:8px; flex-wrap:wrap; }
-        input { padding: 8px; }
-        button,a { padding: 8px 10px; }
-        .msg { margin: 10px 0; color: green; }
+        body { font-family: Arial, sans-serif; padding: 16px; background: #f6f7fb; }
+        .container { max-width: 1050px; margin: 0 auto; }
+
+        h2 { margin: 8px 0 12px; }
+
+        .toolbar { display:flex; gap:10px; align-items:center; justify-content: space-between; flex-wrap:wrap; }
+        .left-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+        .btn {
+            display:inline-block; padding: 10px 12px; border-radius: 6px; border: 1px solid #ddd;
+            background: #fff; cursor: pointer; text-decoration:none; color:#111;
+        }
+        .btn.primary { background: #2563eb; color: #fff; border-color:#1d4ed8; }
+        .btn.danger { background: #ef4444; color:#fff; border-color:#dc2626; }
+        .btn:active { transform: translateY(1px); }
+
+        .msg { margin: 10px 0; padding: 10px 12px; border-radius: 6px; background: #eaffea; color: #0f5132; border: 1px solid #b7f0c2; }
+        .msg.error { background:#ffecec; color:#842029; border-color:#f5c2c7; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; background: #fff; border-radius: 8px; overflow:hidden; }
+        th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
+        th { background: #f1f5f9; font-weight: 700; }
+        tr:hover td { background: #fafafa; }
+        .actions a { margin-right: 10px; }
+
+        /* Panel form */
+        #deviceFormPanel {
+            display:none;
+            margin-top: 14px;
+            background:#fff;
+            border:1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+        .form-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .form-grid .full { grid-column: 1 / -1; }
+        label { display:block; font-weight: 600; margin-bottom: 6px; color:#334155; }
+        input {
+            width:100%;
+            padding: 10px;
+            border:1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        input:focus { border-color:#2563eb; }
+        .form-actions { display:flex; gap:10px; align-items:center; margin-top: 12px; }
+        .muted { color:#64748b; font-size: 13px; }
+
+        @media (max-width: 720px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
+<div class="container">
 
-<h2>Danh sách thiết bị</h2>
+    <h2>Danh sách thiết bị</h2>
 
-<div class="msg" th:if="${success}" th:text="${success}"></div>
+    <!-- Flash message -->
+    <div class="msg" th:if="${success}" th:text="${success}"></div>
 
-<div class="row" style="margin-bottom:10px;">
-    <a th:href="@{/devices/view}">Tất cả</a>
-    <a th:href="@{/devices/view/available}">Chỉ Available</a>
+    <div class="toolbar">
+        <div class="left-actions">
+            <button class="btn primary" type="button" onclick="openAdd()">+ Thêm thiết bị</button>
+            <a class="btn" th:href="@{/admin/devices}">Tất cả</a>
+            <a class="btn" th:href="@{/admin/devices/available}" target="_blank">Xem JSON Available</a>
+        </div>
+        <div class="muted">
+            Tip: bấm “Sửa” để mở form ngay trên trang.
+        </div>
+    </div>
+
+    <!-- PANEL FORM (Add/Edit) -->
+    <div id="deviceFormPanel">
+        <h3 id="formTitle" style="margin:0 0 10px;">Thêm thiết bị</h3>
+
+        <form id="deviceForm" method="post" th:object="${device}">
+            <!-- CSRF: nếu bật Spring Security + CSRF -->
+            <input type="hidden"
+                   th:if="${_csrf != null}"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}" />
+
+
+            <input type="hidden" id="deviceId" th:field="*{id}" />
+
+            <div class="form-grid">
+                <div class="full">
+                    <label for="name">Tên thiết bị</label>
+                    <input id="name" th:field="*{name}" placeholder="VD: Máy chiếu" required />
+                </div>
+
+                <div>
+                    <label for="type">Type</label>
+                    <input id="type" th:field="*{type}" placeholder="VD: PROJECTOR" />
+                </div>
+
+                <div>
+                    <label for="status">Status</label>
+                    <input id="status" th:field="*{status}" placeholder="VD: Available" />
+                </div>
+
+                <div>
+                    <label for="quantity">Số lượng</label>
+                    <input id="quantity" th:field="*{quantity}" type="number" min="0" placeholder="0" />
+                </div>
+
+                <div class="full muted" id="editHint" style="display:none;">
+                    Bạn đang sửa thiết bị ID: <b id="editIdText"></b>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn primary" type="submit" id="submitBtn">Thêm</button>
+                <button class="btn" type="button" onclick="closeForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- TABLE LIST -->
+    <table>
+        <thead>
+        <tr>
+            <th style="width:70px;">ID</th>
+            <th>Tên</th>
+            <th style="width:160px;">Type</th>
+            <th style="width:140px;">Status</th>
+            <th style="width:110px;">Số lượng</th>
+            <th style="width:170px;">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="d : ${devices}">
+            <td th:text="${d.id}"></td>
+            <td th:text="${d.name}"></td>
+            <td th:text="${d.type}"></td>
+            <td th:text="${d.status}"></td>
+            <td th:text="${d.quantity}"></td>
+            <td class="actions">
+                <!-- Sửa bằng JS: không chuyển trang -->
+                <a href="javascript:void(0)"
+                   th:attr="data-id=${d.id},
+                    data-name=${d.name},
+                    data-type=${d.type},
+                    data-status=${d.status},
+                    data-qty=${d.quantity}"
+                   onclick="openEdit(this)">Sửa</a>
+
+                <a class="btn danger"
+                   th:href="@{/admin/devices/delete/{id}(id=${d.id})}"
+                   onclick="return confirm('Xóa thiết bị này?')">Xóa</a>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(devices)}">
+            <td colspan="6" style="padding:16px;">Không có thiết bị</td>
+        </tr>
+        </tbody>
+    </table>
+
 </div>
 
-<h3>Thêm thiết bị</h3>
-<form th:action="@{/devices/view/add}" th:object="${device}" method="post" class="row">
-    <input th:field="*{name}" placeholder="Tên thiết bị" required />
-    <input th:field="*{type}" placeholder="Type (vd: PROJECTOR)" />
-    <input th:field="*{status}" placeholder="Status (Available/Unavailable)" />
-    <input th:field="*{quantity}" type="number" min="0" placeholder="Số lượng" style="width:120px" />
-    <button type="submit">Thêm</button>
-</form>
+<script>
+    function openAdd() {
+        document.getElementById("formTitle").innerText = "Thêm thiết bị";
+        document.getElementById("submitBtn").innerText = "Thêm";
+        document.getElementById("deviceForm").action = "/admin/devices/add";
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Tên</th>
-        <th>Type</th>
-        <th>Status</th>
-        <th>Số lượng</th>
-        <th>Hành động</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="d : ${devices}">
-        <td th:text="${d.id}"></td>
-        <td th:text="${d.name}"></td>
-        <td th:text="${d.type}"></td>
-        <td th:text="${d.status}"></td>
-        <td th:text="${d.quantity}"></td>
-        <td>
-            <a th:href="@{/devices/view/edit/{id}(id=${d.id})}">Sửa</a>
-            <a th:href="@{/devices/view/delete/{id}(id=${d.id})}"
-               onclick="return confirm('Xóa thiết bị này?')">Xóa</a>
-        </td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(devices)}">
-        <td colspan="6">Không có thiết bị</td>
-    </tr>
-    </tbody>
-</table>
+        // clear
+        document.getElementById("deviceId").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("type").value = "";
+        document.getElementById("status").value = "";
+        document.getElementById("quantity").value = 0;
 
+        // hint edit off
+        document.getElementById("editHint").style.display = "none";
+        document.getElementById("editIdText").innerText = "";
+
+        document.getElementById("deviceFormPanel").style.display = "block";
+        document.getElementById("name").focus();
+    }
+
+    function openEdit(el) {
+        const id = el.dataset.id;
+
+        document.getElementById("formTitle").innerText = "Sửa thiết bị";
+        document.getElementById("submitBtn").innerText = "Cập nhật";
+        document.getElementById("deviceForm").action = "/admin/devices/edit/" + id;
+
+        // fill
+        document.getElementById("deviceId").value = id;
+        document.getElementById("name").value = el.dataset.name || "";
+        document.getElementById("type").value = el.dataset.type || "";
+        document.getElementById("status").value = el.dataset.status || "";
+        document.getElementById("quantity").value = el.dataset.qty || 0;
+
+        // hint edit on
+        document.getElementById("editHint").style.display = "block";
+        document.getElementById("editIdText").innerText = id;
+
+        document.getElementById("deviceFormPanel").style.display = "block";
+        document.getElementById("name").focus();
+    }
+
+    function closeForm() {
+        document.getElementById("deviceFormPanel").style.display = "none";
+    }
+</script>
 </body>
 </html>

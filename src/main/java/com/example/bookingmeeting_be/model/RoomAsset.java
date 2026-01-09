@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import com.example.bookingmeeting_be.model.Device;
 
 @Entity
-@Table(name = "Room_Assets")
+@Table(name = "room_assets")
 public class RoomAsset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "asset_id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -31,11 +31,11 @@ public class RoomAsset {
         this.device = device;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
