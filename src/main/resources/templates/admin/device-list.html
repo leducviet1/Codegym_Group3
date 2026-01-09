@@ -1,3 +1,71 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" lang="vi">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8" />-->
+<!--    <title>Thiết bị</title>-->
+<!--    <style>-->
+<!--        body { font-family: Arial; padding: 16px; }-->
+<!--        table { width: 100%; border-collapse: collapse; margin-top: 12px; }-->
+<!--        th, td { border: 1px solid #ddd; padding: 8px; }-->
+<!--        th { background: #f5f5f5; }-->
+<!--        .row { display:flex; gap:8px; flex-wrap:wrap; }-->
+<!--        input { padding: 8px; }-->
+<!--        button,a { padding: 8px 10px; }-->
+<!--        .msg { margin: 10px 0; color: green; }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h2>Danh sách thiết bị</h2>-->
+
+<!--<div class="msg" th:if="${success}" th:text="${success}"></div>-->
+
+<!--<div class="row" style="margin-bottom:10px;">-->
+<!--    <a th:href="@{/admin/devices}">Tất cả</a>-->
+<!--    <a th:href="@{/admin/devices/available}">Chỉ Available</a>-->
+<!--</div>-->
+
+<!--<h3>Thêm thiết bị</h3>-->
+<!--<form th:action="@{/admin/devices/add}" th:object="${device}" method="post" class="row">-->
+<!--    <input th:field="*{name}" placeholder="Tên thiết bị" required />-->
+<!--    <input th:field="*{type}" placeholder="Type (vd: PROJECTOR)" />-->
+<!--    <input th:field="*{status}" placeholder="Status (Available/Unavailable)" />-->
+<!--    <input th:field="*{quantity}" type="number" min="0" placeholder="Số lượng" style="width:120px" />-->
+<!--    <button type="submit">Thêm</button>-->
+<!--</form>-->
+
+<!--<table>-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>ID</th>-->
+<!--        <th>Tên</th>-->
+<!--        <th>Type</th>-->
+<!--        <th>Status</th>-->
+<!--        <th>Số lượng</th>-->
+<!--        <th>Hành động</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr th:each="d : ${devices}">-->
+<!--        <td th:text="${d.id}"></td>-->
+<!--        <td th:text="${d.name}"></td>-->
+<!--        <td th:text="${d.type}"></td>-->
+<!--        <td th:text="${d.status}"></td>-->
+<!--        <td th:text="${d.quantity}"></td>-->
+<!--        <td>-->
+<!--            <a th:href="@{/admin/devices/edit/{id}(id=${d.id})}">Sửa</a>-->
+<!--            <a th:href="@{/admin/devices/delete/{id}(id=${d.id})}"-->
+<!--               onclick="return confirm('Xóa thiết bị này?')">Xóa</a>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    <tr th:if="${#lists.isEmpty(devices)}">-->
+<!--        <td colspan="6">Không có thiết bị</td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
@@ -216,3 +284,4 @@
 </script>
 </body>
 </html>
+
