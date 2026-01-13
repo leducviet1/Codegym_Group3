@@ -5,6 +5,9 @@ import com.example.bookingmeeting_be.model.BookingDeviceKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface BookingDeviceRepository extends JpaRepository<BookingDevice, BookingDeviceKey> {
+    List<BookingDevice> findByBookingId(Integer bookingId);
 }
