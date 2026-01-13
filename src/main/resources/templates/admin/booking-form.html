@@ -153,22 +153,63 @@
 
                             <div class="row">
                                 <!-- Room ID -->
+<!--                                <div class="col-md-6 mb-3">-->
+<!--                                    <label class="form-label">Room ID <span class="text-danger">*</span></label>-->
+<!--                                    <input type="number" class="form-control"-->
+<!--                                           th:field="*{roomId}"-->
+<!--                                           required min="1">-->
+<!--                                    <small class="text-muted">ID phòng họp trong hệ thống.</small>-->
+<!--                                </div>-->
+                                <!-- Room -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Room ID <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control"
-                                           th:field="*{roomId}"
-                                           required min="1">
-                                    <small class="text-muted">ID phòng họp trong hệ thống.</small>
+                                    <label class="form-label">Phòng họp <span class="text-danger">*</span></label>
+
+                                    <select class="form-select"
+                                            th:field="*{roomId}"
+                                            required>
+                                        <option value="">-- Chọn phòng họp --</option>
+
+                                        <option th:each="r : ${rooms}"
+                                                th:value="${r.id}"
+                                        th:text="${r.name + ' (Sức chứa: ' + r.capacity + ')'}">
+                                        </option>
+                                    </select>
+
+                                    <small class="text-muted">Chọn phòng có sẵn trong hệ thống.</small>
                                 </div>
 
+
                                 <!-- Host User ID -->
+<!--                                <div class="col-md-6 mb-3">-->
+<!--                                    <label class="form-label">Host User ID <span class="text-danger">*</span></label>-->
+<!--                                    <input type="number" class="form-control"-->
+<!--                                           th:field="*{host UserId}"-->
+<!--                                           required min="1">-->
+<!--                                    <small class="text-muted">ID người chủ trì.</small>-->
+<!--                                </div>-->
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Host User ID <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control"
-                                           th:field="*{hostUserId}"
-                                           required min="1">
-                                    <small class="text-muted">ID người chủ trì.</small>
+                                    <label class="form-label">
+                                        Host (Người chủ trì) <span class="text-danger">*</span>
+                                    </label>
+
+                                    <select class="form-select" th:field="*{hostUserId}" required>
+                                        <option value="">-- Chọn người chủ trì --</option>
+
+
+                                        <option th:each="u : ${hostUsers}"
+                                                th:value="${u.userId}"
+                                                th:text="${u.fullname + ' (' + u.email + ')'}">
+                                            <div class="alert alert-info">
+                                                hostUsers size: <span th:text="${hostUsers == null ? 'null' : #lists.size(hostUsers)}"></span>
+                                            </div>
+                                        </option>
+                                    </select>
+
+                                    <small class="text-muted">
+                                        Chỉ hiển thị người dùng có quyền đặt lịch (BOOKER).
+                                    </small>
                                 </div>
+
                             </div>
 
                             <div class="row">
