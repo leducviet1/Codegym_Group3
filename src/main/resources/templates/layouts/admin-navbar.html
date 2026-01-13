@@ -169,14 +169,32 @@
                     </li>
                 </ul>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#devices-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-hdd-stack"></i>
+                    <span>Quản lý thiết bị</span>
+                    <i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="devices-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a th:href="@{/admin/devices}">
+                            <i class="bi bi-circle"></i><span>Danh sách thiết bị</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/devices/available}">
+                            <i class="bi bi-circle"></i><span>Thiết bị có sẵn</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-journal-text"></i><span>Quản lý phòng họp</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
-                        <a th:href="@{/admin-department}">
+                        <a th:href="@{/admin/meeting-rooms}">
                             <i class="bi bi-circle"></i><span>Danh sách phòng họp</span>
                         </a>
                     </li>
