@@ -3,8 +3,11 @@ package com.example.bookingmeeting_be.controller.admin.view;
 import com.example.bookingmeeting_be.model.Booking;
 import com.example.bookingmeeting_be.model.Device;
 import com.example.bookingmeeting_be.model.dto.BookingRequest;
+import com.example.bookingmeeting_be.repository.MeetingRoomRepository;
 import com.example.bookingmeeting_be.services.BookingService;
 import com.example.bookingmeeting_be.services.DeviceService;
+import com.example.bookingmeeting_be.services.MeetingRoomService;
+import com.example.bookingmeeting_be.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +25,11 @@ public class BookingViewController {
     private BookingService bookingService;
 
     @Autowired
+    private MeetingRoomService meetingRoomService;
+    @Autowired
     private DeviceService deviceService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public String listBookings(@RequestParam(value = "userId", required = false) Integer userId, Model model) {
@@ -41,9 +48,11 @@ public class BookingViewController {
         BookingRequest bookingRequest = new BookingRequest();
         bookingRequest.setDevices(new ArrayList<>());
         model.addAttribute("bookingRequest", bookingRequest);
-
+        model.addAttribute("rooms", meetingRoomService.getAllWithAssets());
         List<Device> availableDevices = deviceService.getAvailableDevices();
         model.addAttribute("availableDevices", availableDevices);
+
+        model.addAttribute("hostUsers", userService.findBookers());
 
         return "admin/booking-form";
     }

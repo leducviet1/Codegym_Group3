@@ -105,4 +105,7 @@ public class UserService {
         userRepository.save(user);
 
     }
+    public List<Users> findBookers() {
+        return userRepository.findUsersByRoleName("ROLE_BOOKER");
+    }
 }
