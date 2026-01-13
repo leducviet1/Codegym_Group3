@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý đặt phòng</title>
+
+    <!-- dùng layout head của bạn -->
+    <div th:replace="~{layouts/admin-head :: admin-head}"></div>
+
+    <style>
+        .badge { padding: 6px 10px; border-radius: 999px; font-size: 12px; }
+        .badge-confirmed { background: #198754; color: #fff; }
+        .badge-pending { background: #ffc107; color: #212529; }
+        .badge-cancelled { background: #6c757d; color: #fff; }
+        .table td, .table th { vertical-align: middle; }
+        .actions a { margin-right: 6px; }
+    </style>
+</head>
+
+<body>
+
+<!-- navbar admin -->
+<div th:replace="~{layouts/admin-navbar :: admin-navbar}"></div>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Quản lý đặt phòng</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/admin}">Home</a></li>
+                <li class="breadcrumb-item active">Bookings</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- alert messages -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <section class="section">
+        <div class="card">
+            <div class="card-body pt-3">
+
+                <!-- top actions -->
+                <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <!-- search input (client-side) -->
+                        <input id="searchInput" type="text" class="form-control"
+                               placeholder="Tìm theo tiêu đề / mô tả / phòng / host..."
+                               style="min-width: 320px;">
+
+                        <!-- status filter (client-side) -->
+                        <select id="statusFilter" class="form-select" style="width: 200px;">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="CONFIRMED">CONFIRMED</option>
+                            <option value="PENDING">PENDING</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <!-- nút tạo booking -->
+                        <a class="btn btn-primary" th:href="@{/admin/bookings/create}">
+                            + Tạo đặt phòng
+                        </a>
+                    </div>
+                </div>
+
+                <!-- table -->
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle" id="bookingTable">
+                        <thead class="table-light">
+                        <tr>
+                            <th style="width: 70px;">ID</th>
+                            <th>Tiêu đề</th>
+                            <th style="width: 120px;">Room ID</th>
+                            <th style="width: 120px;">Host ID</th>
+                            <th style="width: 190px;">Bắt đầu</th>
+                            <th style="width: 190px;">Kết thúc</th>
+                            <th style="width: 140px;">Trạng thái</th>
+                            <th style="width: 170px;">Hành động</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="b : ${bookings}">
+                            <td th:text="${b.id}">1</td>
+
+                            <td>
+                                <div class="fw-semibold" th:text="${b.title}">Title</div>
+                                <div class="text-muted small"
+                                     th:text="${#strings.abbreviate(b.description, 80)}">desc...</div>
+                            </td>
+
+                            <td th:text="${b.roomId}">101</td>
+                            <td th:text="${b.hostUserId}">5</td>
+
+                            <td th:text="${#temporals.format(b.startTime, 'yyyy-MM-dd HH:mm')}">2026-01-13 09:00</td>
+                            <td th:text="${#temporals.format(b.endTime, 'yyyy-MM-dd HH:mm')}">2026-01-13 10:00</td>
+
+                            <td>
+                                <!-- badge theo status -->
+                                <span th:if="${b.status == 'CONFIRMED'}" class="badge badge-confirmed">CONFIRMED</span>
+                                <span th:if="${b.status == 'PENDING'}" class="badge badge-pending">PENDING</span>
+                                <span th:if="${b.status == 'CANCELLED'}" class="badge badge-cancelled">CANCELLED</span>
+                                <span th:if="${b.status != 'CONFIRMED' and b.status != 'PENDING' and b.status != 'CANCELLED'}"
+                                      class="badge badge-cancelled"
+                                      th:text="${b.status}">UNKNOWN</span>
+                            </td>
+
+                            <td class="actions">
+                                <!-- xem chi tiết (nếu có) -->
+                                <a class="btn btn-sm btn-outline-secondary"
+                                   th:href="@{/admin/bookings/{id}(id=${b.id})}">
+                                    Xem
+                                </a>
+
+                                <!-- sửa (nếu có) -->
+                                <a class="btn btn-sm btn-outline-primary"
+                                   th:href="@{/admin/bookings/{id}/edit(id=${b.id})}">
+                                    Sửa
+                                </a>
+
+                                <!-- hủy (POST) -->
+                                <form th:action="@{/admin/bookings/{id}/cancel(id=${b.id})}"
+                                      method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Bạn có chắc muốn hủy booking này?');">
+                                        Hủy
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${bookings == null || #lists.isEmpty(bookings)}">
+                            <td colspan="8" class="text-center text-muted py-4">
+                                Chưa có đặt phòng nào.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    // lọc client-side: search + status
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const table = document.getElementById('bookingTable');
+    const rows = () => Array.from(table.querySelectorAll('tbody tr'))
+        .filter(r => !r.querySelector('td[colspan]')); // bỏ dòng "empty"
+
+    function normalize(s) {
+        return (s || '').toString().toLowerCase();
+    }
+
+    function applyFilter() {
+        const q = normalize(searchInput.value);
+        const st = normalize(statusFilter.value);
+
+        rows().forEach(tr => {
+            const text = normalize(tr.innerText);
+            const badge = tr.querySelector('td:nth-child(7)')?.innerText || '';
+            const statusText = normalize(badge);
+
+            const matchQ = !q || text.includes(q);
+            const matchSt = !st || statusText.includes(st);
+
+            tr.style.display = (matchQ && matchSt) ? '' : 'none';
+        });
+    }
+
+    searchInput.addEventListener('input', applyFilter);
+    statusFilter.addEventListener('change', applyFilter);
+</script>
+
+</body>
+</html>
