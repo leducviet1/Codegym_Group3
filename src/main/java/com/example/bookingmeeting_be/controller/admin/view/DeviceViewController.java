@@ -56,7 +56,10 @@ public class DeviceViewController {
 
     }
     @GetMapping("/available")
-    public List<Device> getAvailable() {
-        return deviceService.getAvailableDevices();
+    public String getAvailable(Model model) {
+        List<Device> devices = deviceService.getAvailableDevices();
+        model.addAttribute("devices", devices);
+        model.addAttribute("device", new Device());
+        return "admin/devices-available";
     }
 }
