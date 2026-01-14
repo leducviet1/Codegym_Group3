@@ -70,7 +70,7 @@ public class BookingViewController {
         }
     }
 
-    @GetMapping("/cancel/{id}")
+    @PostMapping("/{id}/cancel")
     public String cancelBooking(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             bookingService.cancelBooking(id);
@@ -80,4 +80,41 @@ public class BookingViewController {
         }
         return "redirect:/admin/bookings";
     }
+    @GetMapping("/{id}/edit")
+    public String editBookingForm(@PathVariable("id") Integer id, Model model) {
+        Booking booking = bookingService.getBookingById(id);
+        BookingRequest bookingRequest = new BookingRequest();
+        bookingRequest.setTitle(booking.getTitle());
+        bookingRequest.setRoomId(booking.getRoomId());
+        bookingRequest.setHostUserId(booking.getHostUserId());
+        bookingRequest.setStartTime(booking.getStartTime());
+        bookingRequest.setEndTime(booking.getEndTime());
+        bookingRequest.setDescription(booking.getDescription());
+        bookingRequest.setDevices(new ArrayList<>());
+
+        model.addAttribute("isEdit", true);
+        model.addAttribute("bookingId", id);
+        model.addAttribute("bookingRequest", bookingRequest);
+
+        // data cho select
+        model.addAttribute("rooms", meetingRoomService.getAllWithAssets());
+        model.addAttribute("availableDevices", deviceService.getAvailableDevices());
+        model.addAttribute("hostUsers", userService.findBookers());
+
+        return "admin/booking-form";
+    }
+    @PostMapping("/{id}/edit")
+    public String updateBooking(@PathVariable("id") Integer id,
+                                @ModelAttribute("bookingRequest") BookingRequest bookingRequest,
+                                RedirectAttributes redirectAttributes) {
+        try {
+            bookingService.updateBooking(id, bookingRequest);
+            redirectAttributes.addFlashAttribute("successMessage", "Booking updated successfully!");
+            return "redirect:/admin/bookings";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/admin/bookings/" + id + "/edit";
+        }
+    }
+
 }

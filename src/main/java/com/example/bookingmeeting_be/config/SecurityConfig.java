@@ -56,7 +56,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         // static
-                        .requestMatchers("/admin/assets/**","/assets/**", "/css/**", "/js/**", "/img/**", "/webjars/**", "/test-booking.html","/favicon.ico").permitAll()
+                        .requestMatchers("/admin/assets/**","/assets/**", "/css/**", "/js/**", "/img/**", "/webjars/**", "/error","/favicon.ico").permitAll()
 
                         // thymeleaf pages public
                         .requestMatchers("/", "/users/login", "/users/register", "/admin/login", "/admin/register").permitAll()

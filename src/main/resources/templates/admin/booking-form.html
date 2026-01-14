@@ -1,104 +1,13 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>New Meeting Booking</title>-->
-<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">-->
-<!--</head>-->
-<!--<body class="container mt-4">-->
-<!--<div class="row justify-content-center">-->
-<!--    <div class="col-md-8">-->
-<!--        <div class="card shadow">-->
-<!--            <div class="card-header bg-primary text-white">-->
-<!--                <h4 class="mb-0">Book a New Meeting</h4>-->
-<!--            </div>-->
-<!--            <div class="card-body">-->
-
-<!--                <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>-->
-<!--                <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>-->
-
-<!--                <form th:action="@{/admin/bookings/save}" th:object="${bookingRequest}" method="post">-->
-
-<!--                    <div class="mb-3">-->
-<!--                        <label class="form-label">Meeting Title (*)</label>-->
-<!--                        <input type="text" class="form-control" th:field="*{title}" required placeholder="Ex: Weekly Team Meeting">-->
-<!--                    </div>-->
-
-<!--                    <div class="row">-->
-<!--                        <div class="col-md-6 mb-3">-->
-<!--                            <label class="form-label">Room ID (*)</label>-->
-<!--                            <input type="number" class="form-control" th:field="*{roomId}" required>-->
-<!--                        </div>-->
-<!--                        <div class="col-md-6 mb-3">-->
-<!--                            <label class="form-label">Host User ID (*)</label>-->
-<!--                            <input type="number" class="form-control" th:field="*{hostUserId}" required>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="row">-->
-<!--                        <div class="col-md-6 mb-3">-->
-<!--                            <label class="form-label">Start Time (*)</label>-->
-<!--                            <input type="datetime-local" class="form-control" th:field="*{startTime}" required>-->
-<!--                        </div>-->
-<!--                        <div class="col-md-6 mb-3">-->
-<!--                            <label class="form-label">End Time (*)</label>-->
-<!--                            <input type="datetime-local" class="form-control" th:field="*{endTime}" required>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="mb-3">-->
-<!--                        <label class="form-label">Description</label>-->
-<!--                        <textarea class="form-control" th:field="*{description}" rows="3"></textarea>-->
-<!--                    </div>-->
-
-<!--                    <hr>-->
-<!--                    <h5 class="mb-3">Select Included Devices</h5>-->
-
-<!--                    <div class="alert alert-light border">-->
-<!--                        <div class="row">-->
-<!--                            <div class="col-md-6 mb-2" th:each="device, itemStat : ${availableDevices}">-->
-<!--                                <div class="form-check d-flex align-items-center justify-content-between">-->
-<!--                                    <div>-->
-<!--                                        <input class="form-check-input" type="checkbox"-->
-<!--                                               th:name="|devices[${itemStat.index}].deviceId|"-->
-<!--                                               th:value="${device.id}">-->
-<!--                                        <label class="form-check-label fw-bold" th:text="${device.name}"></label>-->
-<!--                                        <small class="text-muted ms-2" th:text="'(In Stock: ' + ${device.quantity} + ')'"></small>-->
-<!--                                    </div>-->
-
-<!--                                    <input type="number" class="form-control form-control-sm w-25"-->
-<!--                                           th:name="|devices[${itemStat.index}].quantity|"-->
-<!--                                           value="1" min="1" max="10">-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <small class="text-danger fst-italic">* Check the box to select devices you want to borrow.</small>-->
-<!--                    </div>-->
-
-<!--                    <div class="d-flex justify-content-between mt-4">-->
-<!--                        <a href="/admin/bookings" class="btn btn-secondary">Back to List</a>-->
-<!--                        <button type="submit" class="btn btn-primary">Save Booking</button>-->
-<!--                    </div>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <title>Đặt phòng họp | Admin</title>
+    <title th:text="${isEdit} ? 'Sửa lịch họp | Admin' : 'Đặt phòng họp | Admin'">Đặt phòng họp | Admin</title>
     <div th:replace="~{layouts/admin-head :: admin-head}"></div>
 
     <style>
-        /* Tùy chọn: làm form device gọn hơn */
-        .device-row {
-            border-bottom: 1px solid #eee;
-            padding: 10px 0;
-        }
+        .device-row { border-bottom: 1px solid #eee; padding: 10px 0; }
         .device-row:last-child { border-bottom: 0; }
         .device-qty { max-width: 110px; }
     </style>
@@ -110,14 +19,13 @@
 
 <main id="main" class="main">
 
-    <!-- Page title -->
     <div class="pagetitle">
-        <h1>Đặt phòng họp</h1>
+        <h1 th:text="${isEdit} ? 'Sửa lịch họp' : 'Đặt phòng họp'">Đặt phòng họp</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a th:href="@{/admin}">Home</a></li>
                 <li class="breadcrumb-item"><a th:href="@{/admin/bookings}">Danh sách đặt phòng</a></li>
-                <li class="breadcrumb-item active">Tạo mới</li>
+                <li class="breadcrumb-item active" th:text="${isEdit} ? 'Sửa' : 'Tạo mới'">Tạo mới</li>
             </ol>
         </nav>
     </div>
@@ -130,18 +38,19 @@
                 <div class="card">
                     <div class="card-body">
 
-                        <h5 class="card-title">Thông tin cuộc họp</h5>
+                        <h5 class="card-title" th:text="${isEdit} ? 'Cập nhật thông tin cuộc họp' : 'Thông tin cuộc họp'">
+                            Thông tin cuộc họp
+                        </h5>
 
-                        <!-- Alert -->
                         <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
                         <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-                        <form th:action="@{/admin/bookings/save}"
+                        <!-- ✅ Form action động theo isEdit -->
+                        <form th:if="${isEdit}"
+                              th:action="@{/admin/bookings/{id}/edit(id=${bookingId})}"
                               th:object="${bookingRequest}"
-                              method="post"
-                              class="needs-validation">
+                              method="post">
 
-                            <!-- Meeting Title -->
                             <div class="mb-3">
                                 <label class="form-label">Meeting Title <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control"
@@ -152,56 +61,38 @@
                             </div>
 
                             <div class="row">
-                                <!-- Room ID -->
-<!--                                <div class="col-md-6 mb-3">-->
-<!--                                    <label class="form-label">Room ID <span class="text-danger">*</span></label>-->
-<!--                                    <input type="number" class="form-control"-->
-<!--                                           th:field="*{roomId}"-->
-<!--                                           required min="1">-->
-<!--                                    <small class="text-muted">ID phòng họp trong hệ thống.</small>-->
-<!--                                </div>-->
                                 <!-- Room -->
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Phòng họp <span class="text-danger">*</span></label>
 
-                                    <select class="form-select"
-                                            th:field="*{roomId}"
-                                            required>
+                                    <select class="form-select" th:field="*{roomId}" required>
                                         <option value="">-- Chọn phòng họp --</option>
-
                                         <option th:each="r : ${rooms}"
                                                 th:value="${r.id}"
-                                        th:text="${r.name + ' (Sức chứa: ' + r.capacity + ')'}">
+                                                th:text="${r.name + ' (Sức chứa: ' + r.capacity + ')'}">
                                         </option>
                                     </select>
 
                                     <small class="text-muted">Chọn phòng có sẵn trong hệ thống.</small>
                                 </div>
 
-
-                                <!-- Host User ID -->
-<!--                                <div class="col-md-6 mb-3">-->
-<!--                                    <label class="form-label">Host User ID <span class="text-danger">*</span></label>-->
-<!--                                    <input type="number" class="form-control"-->
-<!--                                           th:field="*{host UserId}"-->
-<!--                                           required min="1">-->
-<!--                                    <small class="text-muted">ID người chủ trì.</small>-->
-<!--                                </div>-->
+                                <!-- Host -->
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">
                                         Host (Người chủ trì) <span class="text-danger">*</span>
                                     </label>
 
+                                    <!-- ✅ Debug size đặt ngoài option -->
+                                    <div class="alert alert-info py-2 mb-2" th:if="${hostUsers != null}">
+                                        hostUsers size:
+                                        <b th:text="${#lists.size(hostUsers)}"></b>
+                                    </div>
+
                                     <select class="form-select" th:field="*{hostUserId}" required>
                                         <option value="">-- Chọn người chủ trì --</option>
-
-
                                         <option th:each="u : ${hostUsers}"
                                                 th:value="${u.userId}"
                                                 th:text="${u.fullname + ' (' + u.email + ')'}">
-                                            <div class="alert alert-info">
-                                                hostUsers size: <span th:text="${hostUsers == null ? 'null' : #lists.size(hostUsers)}"></span>
-                                            </div>
                                         </option>
                                     </select>
 
@@ -209,11 +100,10 @@
                                         Chỉ hiển thị người dùng có quyền đặt lịch (BOOKER).
                                     </small>
                                 </div>
-
                             </div>
 
                             <div class="row">
-                                <!-- Start Time -->
+                                <!-- Start -->
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Start Time <span class="text-danger">*</span></label>
                                     <input type="datetime-local" class="form-control"
@@ -221,7 +111,7 @@
                                            required>
                                 </div>
 
-                                <!-- End Time -->
+                                <!-- End -->
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">End Time <span class="text-danger">*</span></label>
                                     <input type="datetime-local" class="form-control"
@@ -230,7 +120,7 @@
                                 </div>
                             </div>
 
-                            <!-- Description -->
+                            <!-- Desc -->
                             <div class="mb-3">
                                 <label class="form-label">Description</label>
                                 <textarea class="form-control"
@@ -248,13 +138,11 @@
                             </small>
 
                             <div class="border rounded p-3">
-
                                 <div th:if="${#lists.isEmpty(availableDevices)}" class="text-muted">
                                     Hiện chưa có thiết bị khả dụng.
                                 </div>
 
-                                <div class="row"
-                                     th:each="device, itemStat : ${availableDevices}">
+                                <div class="row" th:each="device, itemStat : ${availableDevices}">
                                     <div class="col-12 device-row">
                                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
 
@@ -270,12 +158,13 @@
                                                       th:text="${'(In Stock: ' + device.quantity + ')'}"></span>
                                             </div>
 
-                                            <!-- deviceId + quantity theo index -->
                                             <div class="d-flex align-items-center gap-2">
+                                                <!-- ✅ sẽ bị JS disable khi chưa tick -->
                                                 <input type="hidden"
                                                        class="device-id"
                                                        th:name="|devices[${itemStat.index}].deviceId|"
-                                                       th:value="${device.id}"/>
+                                                       th:value="${device.id}"
+                                                       disabled/>
 
                                                 <input type="number"
                                                        class="form-control form-control-sm device-qty"
@@ -287,7 +176,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
                             <small class="text-danger fst-italic d-block mt-2">
@@ -299,26 +187,186 @@
                                 <a th:href="@{/admin/bookings}" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Quay lại
                                 </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-check-circle"></i> Lưu đặt phòng
+
+                                <button type="submit" class="btn btn-primary"
+                                        th:text="${isEdit} ? 'Cập nhật' : 'Lưu đặt phòng'">
+                                    Lưu đặt phòng
                                 </button>
                             </div>
-
                         </form>
+                        <form th:unless="${isEdit}"
+                              th:action="@{/admin/bookings/save}"
+                              th:object="${bookingRequest}"
+                              method="post">
+
+                            <div class="mb-3">
+                                <label class="form-label">Meeting Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control"
+                                       th:field="*{title}"
+                                       required
+                                       placeholder="Ex: Weekly Team Meeting">
+                                <small class="text-muted">Tên cuộc họp để dễ theo dõi.</small>
+                            </div>
+
+                            <div class="row">
+                                <!-- Room -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phòng họp <span class="text-danger">*</span></label>
+
+                                    <select class="form-select" th:field="*{roomId}" required>
+                                        <option value="">-- Chọn phòng họp --</option>
+                                        <option th:each="r : ${rooms}"
+                                                th:value="${r.id}"
+                                                th:text="${r.name + ' (Sức chứa: ' + r.capacity + ')'}">
+                                        </option>
+                                    </select>
+
+                                    <small class="text-muted">Chọn phòng có sẵn trong hệ thống.</small>
+                                </div>
+
+                                <!-- Host -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        Host (Người chủ trì) <span class="text-danger">*</span>
+                                    </label>
+
+                                    <!-- ✅ Debug size đặt ngoài option -->
+                                    <div class="alert alert-info py-2 mb-2" th:if="${hostUsers != null}">
+                                        hostUsers size:
+                                        <b th:text="${#lists.size(hostUsers)}"></b>
+                                    </div>
+
+                                    <select class="form-select" th:field="*{hostUserId}" required>
+                                        <option value="">-- Chọn người chủ trì --</option>
+                                        <option th:each="u : ${hostUsers}"
+                                                th:value="${u.userId}"
+                                                th:text="${u.fullname + ' (' + u.email + ')'}">
+                                        </option>
+                                    </select>
+
+                                    <small class="text-muted">
+                                        Chỉ hiển thị người dùng có quyền đặt lịch (BOOKER).
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Start -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Start Time <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" class="form-control"
+                                           th:field="*{startTime}"
+                                           required>
+                                </div>
+
+                                <!-- End -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">End Time <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" class="form-control"
+                                           th:field="*{endTime}"
+                                           required>
+                                </div>
+                            </div>
+
+                            <!-- Desc -->
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control"
+                                          th:field="*{description}"
+                                          rows="3"
+                                          placeholder="Ghi chú thêm..."></textarea>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- DEVICES -->
+                            <h5 class="card-title mb-2">Thiết bị đi kèm</h5>
+                            <small class="text-muted d-block mb-3">
+                                Tick thiết bị cần mượn và nhập số lượng.
+                            </small>
+
+                            <div class="border rounded p-3">
+                                <div th:if="${#lists.isEmpty(availableDevices)}" class="text-muted">
+                                    Hiện chưa có thiết bị khả dụng.
+                                </div>
+
+                                <div class="row" th:each="device, itemStat : ${availableDevices}">
+                                    <div class="col-12 device-row">
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+
+                                            <div class="form-check">
+                                                <input class="form-check-input device-check"
+                                                       type="checkbox"
+                                                       th:id="${'dev_' + device.id}"
+                                                       th:attr="data-index=${itemStat.index}">
+                                                <label class="form-check-label fw-bold"
+                                                       th:for="${'dev_' + device.id}"
+                                                       th:text="${device.name}"></label>
+                                                <span class="text-muted ms-2"
+                                                      th:text="${'(In Stock: ' + device.quantity + ')'}"></span>
+                                            </div>
+
+                                            <div class="d-flex align-items-center gap-2">
+                                                <!-- ✅ sẽ bị JS disable khi chưa tick -->
+                                                <input type="hidden"
+                                                       class="device-id"
+                                                       th:name="|devices[${itemStat.index}].deviceId|"
+                                                       th:value="${device.id}"
+                                                       disabled/>
+
+                                                <input type="number"
+                                                       class="form-control form-control-sm device-qty"
+                                                       th:name="|devices[${itemStat.index}].quantity|"
+                                                       value="1" min="1" max="10"
+                                                       disabled>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <small class="text-danger fst-italic d-block mt-2">
+                                * Chỉ thiết bị được tick mới được gửi lên.
+                            </small>
+
+                            <!-- Actions -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a th:href="@{/admin/bookings}" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Quay lại
+                                </a>
+
+                                <button type="submit" class="btn btn-primary"
+                                        th:text="${isEdit} ? 'Cập nhật' : 'Lưu đặt phòng'">
+                                    Lưu đặt phòng
+                                </button>
+                            </div>
+                        </form>
+
+
+                        <!-- nếu bạn bật CSRF thì mở dòng này -->
+                            <!--
+                            <input type="hidden" th:if="${_csrf != null}"
+                                   th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            -->
+
+                            <!-- Title -->
+
 
                     </div>
                 </div>
             </div>
 
-            <!-- SIDEBAR HELP -->
+            <!-- SIDEBAR -->
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Gợi ý</h5>
-                        <p><strong>Room ID:</strong> ID phòng trong hệ thống (nếu sau này bạn có dropdown, sẽ thay input này).</p>
-                        <p><strong>Host User ID:</strong> ID người chủ trì (có thể đổi sang dropdown chọn user).</p>
                         <p><strong>Thời gian:</strong> End time phải lớn hơn Start time.</p>
                         <p><strong>Thiết bị:</strong> Tick thiết bị cần mượn và nhập số lượng.</p>
+                        <p th:if="${isEdit}">
+                            <strong>Edit:</strong> Form đang ở chế độ sửa, nút sẽ là “Cập nhật”.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -330,20 +378,23 @@
 
 <div th:replace="~{layouts/admin-footer :: admin-footer}"></div>
 
-<!-- JS: tick mới enable quantity, bỏ tick thì disable -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".device-check").forEach(cb => {
             cb.addEventListener("change", function () {
                 const idx = cb.dataset.index;
                 const qtyInput = document.querySelector(`input[name="devices[${idx}].quantity"]`);
-                if (!qtyInput) return;
+                const idInput  = document.querySelector(`input[name="devices[${idx}].deviceId"]`);
+
+                if (!qtyInput || !idInput) return;
 
                 if (cb.checked) {
                     qtyInput.disabled = false;
+                    idInput.disabled = false;
                     if (qtyInput.value === "" || qtyInput.value === "0") qtyInput.value = 1;
                 } else {
                     qtyInput.disabled = true;
+                    idInput.disabled = true;
                     qtyInput.value = 1;
                 }
             });
@@ -353,3 +404,4 @@
 
 </body>
 </html>
+
