@@ -19,17 +19,25 @@ public class BookingService {
     private BookingDeviceRepository bookingDeviceRepository;
     @Autowired
     private DeviceRepository deviceRepository;
+    @Autowired
+    private BookingAttendeeRepository bookingAttendeeRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private NotificationRecipientRepository notificationRecipientRepository;
 
     @Transactional
     public Booking createBooking(BookingRequest request) {
         //Validate Time
-        if(request.getStartTime()==null || request.getEndTime()==null){
+        if (request.getStartTime() == null || request.getEndTime() == null) {
             throw new RuntimeException("Không đuợc trống thời gian");
         }
-        if(!request.getStartTime().isBefore(request.getEndTime())){
+        if (!request.getStartTime().isBefore(request.getEndTime())) {
             throw new RuntimeException("Thời gian kết thúc phải lớn hơn thời gian bắt đầu");
         }
-        if(request.getStartTime().isBefore(LocalDateTime.now())){
+        if (request.getStartTime().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Không được đặt thời gian trong quá khứ");
         }
         boolean isConflict = bookingRepository.existsOverlappingBooking(
@@ -37,7 +45,7 @@ public class BookingService {
                 request.getStartTime(),
                 request.getEndTime()
         );
-        if(isConflict){
+        if (isConflict) {
             throw new RuntimeException("Không thể đặt phòng họp này trong thời gian này");
         }
         Booking booking = new Booking();
@@ -68,6 +76,7 @@ public class BookingService {
 
                     BookingDevice bookingDevice = new BookingDevice(savedBooking, device, item.getQuantity());
                     bookingDeviceRepository.save(bookingDevice);
+                    syncAttendeesAndNotify(savedBooking,request.getAttendeeUserIds(),false);
                 }
             }
         }
@@ -95,14 +104,15 @@ public class BookingService {
         booking.setStatus("CANCELLED");
         bookingRepository.save(booking);
     }
+
     @Transactional
-    public Booking updateBooking(Integer bookingId ,BookingRequest request) {
+    public Booking updateBooking(Integer bookingId, BookingRequest request) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
-        if("CANCELLED".equals(booking.getStatus())){
+        if ("CANCELLED".equals(booking.getStatus())) {
             throw new RuntimeException("Không thể sửa phòng họp đã hủy");
         }
-        if(!request.getStartTime().isBefore(request.getEndTime())){
+        if (!request.getStartTime().isBefore(request.getEndTime())) {
             throw new RuntimeException("Thời gian không hợp lệ");
         }
         boolean conflict = bookingRepository.existsOverlappingBookingForUpdate(
@@ -122,18 +132,81 @@ public class BookingService {
         booking.setEndTime(request.getEndTime());
         booking.setDescription(request.getDescription());
 
-        return bookingRepository.save(booking);
+        Booking updatedBooking = bookingRepository.save(booking);
+        syncAttendeesAndNotify(updatedBooking,request.getAttendeeUserIds(),true);
+
+        return updatedBooking;
     }
 
     public List<Booking> getBookingsByUser(Integer userId) {
         return bookingRepository.findByHostUserIdOrderByStartTimeDesc(userId);
     }
+
     public Booking getBookingById(Integer bookingId) {
-        return  bookingRepository.findById(bookingId)
+        return bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
     }
 
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
     }
+
+    @Transactional
+    public void syncAttendeesAndNotify(Booking booking, List<Integer> attendeeIds, boolean isUpdate) {
+
+        // 1) nếu update: xoá hết attendees cũ (bản đơn giản)
+        if (isUpdate) {
+            bookingAttendeeRepository.deleteByBookingAttendeeIdBookingId(booking.getId());
+        }
+
+        // 2) normalize list: null-safe, bỏ host, bỏ trùng
+        if (attendeeIds == null || attendeeIds.isEmpty()) return;
+
+        List<Integer> normalized = attendeeIds.stream()
+                .filter(id -> id != null)
+                .filter(id -> !id.equals(booking.getHostUserId()))
+                .distinct()
+                .toList();
+
+        if (normalized.isEmpty()) return;
+
+        // 3) tạo BookingAttendee
+        for (Integer uid : normalized) {
+            Users u = userRepository.findById(uid)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + uid));
+
+            BookingAttendee ba = new BookingAttendee();
+            ba.setBookingAttendeeId(new BookingAttendeeId(booking.getId(), uid));
+            ba.setBooking(booking);
+            ba.setUsers(u);
+            ba.setStatus("INVITED");
+
+            bookingAttendeeRepository.save(ba);
+        }
+
+        // 4) tạo 1 notification chung cho booking (không gắn user ở đây)
+        Notification noti = new Notification();
+        noti.setBookingId(booking.getId()); // ✅ đúng: bookingId = booking.getId()
+        noti.setType(isUpdate ? "BOOKING_UPDATED" : "INVITE");
+        noti.setContent(
+                (isUpdate ? "Lịch họp đã được cập nhật: " : "Bạn được mời tham dự: ")
+                        + booking.getTitle()
+        );
+        noti.setCreatedAt(LocalDateTime.now());
+
+        Notification savedNoti = notificationRepository.save(noti);
+
+        // 5) tạo recipients cho từng user
+        for (Integer uid : normalized) {
+            NotificationRecipient nr = new NotificationRecipient();
+            nr.setNotification(savedNoti);
+            Users uRef = userRepository.getReferenceById(uid); // hoặc findById(uid).orElseThrow()
+            nr.setUser(uRef); // ✅ bắt buộc (MapsId userId)
+            nr.setId(new NotificationRecipientId(savedNoti.getNotificationId(), uid));
+            nr.setIsRead(false);
+
+            notificationRecipientRepository.save(nr);
+        }
+    }
+
 }

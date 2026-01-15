@@ -1,5 +1,6 @@
 package com.example.bookingmeeting_be.model.dto;
 
+import com.example.bookingmeeting_be.model.BookingAttendee;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,4 +52,5 @@ public class BookingRequest {
         private Integer deviceId;
         private int quantity;
     }
+    private List<Integer> attendeeUserIds;
 }

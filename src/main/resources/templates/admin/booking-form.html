@@ -99,7 +99,18 @@
                                     <small class="text-muted">
                                         Chỉ hiển thị người dùng có quyền đặt lịch (BOOKER).
                                     </small>
+                                    <div class="mb-3">
+                                        <label class="form-label">Người tham dự</label>
+                                        <select class="form-select" multiple th:field="*{attendeeUserIds}">
+                                            <option th:each="u : ${attendees}"
+                                                    th:value="${u.userId}"
+                                                    th:text="${u.fullname + ' - ' + u.email}">
+                                            </option>
+                                        </select>
+                                        <small class="text-muted">Giữ Ctrl (Windows) / Cmd (Mac) để chọn nhiều người</small>
+                                    </div>
                                 </div>
+
                             </div>
 
                             <div class="row">
@@ -243,10 +254,29 @@
                                                 th:text="${u.fullname + ' (' + u.email + ')'}">
                                         </option>
                                     </select>
+                                    <label class="form-label">Người tham dự</label>
+<!--                                    <select class="form-select" multiple th:field="*{attendeeUserIds}">-->
+<!--                                        <option th:each="u : ${attendees}"-->
+<!--                                                th:value="${u.userId}"-->
+<!--                                                th:text="${u.fullname + ' - ' + u.email}">-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+
 
                                     <small class="text-muted">
                                         Chỉ hiển thị người dùng có quyền đặt lịch (BOOKER).
                                     </small>
+                                    <div class="mb-3">
+                                        <label class="form-label">Người tham dự</label>
+                                        <select class="form-select" multiple th:field="*{attendeeUserIds}">
+                                            <option th:each="u : ${attendees}"
+                                                    th:value="${u.userId}"
+                                                    th:text="${u.fullname + ' - ' + u.email}">
+                                            </option>
+                                        </select>
+                                        <small class="text-muted">Giữ Ctrl (Windows) / Cmd (Mac) để chọn nhiều người</small>
+                                    </div>
+
                                 </div>
                             </div>
 

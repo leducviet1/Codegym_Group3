@@ -281,6 +281,7 @@
                             <th>Tiêu đề</th>
                             <th style="width: 120px;">Room</th>
                             <th style="width: 120px;">Host</th>
+                            <th style="width: 120px;">AttendeeUser</th>
                             <th style="width: 190px;">Bắt đầu</th>
                             <th style="width: 190px;">Kết thúc</th>
                             <th style="width: 150px;">Trạng thái</th>
@@ -305,6 +306,12 @@
                             <td>
                                 <span class="badge text-bg-light border" th:text="${b.hostUserId}">5</span>
                             </td>
+                            <td th:text="(${attendeeCounts[b.id]} ?: 0) + '/' + ((${invitedCounts} != null) ? (${invitedCounts[b.id]} ?: 0) : 0) + ' người'"></td>
+
+
+
+
+
 
                             <td th:text="${#temporals.format(b.startTime, 'yyyy-MM-dd HH:mm')}">2026-01-13 09:00</td>
                             <td th:text="${#temporals.format(b.endTime, 'yyyy-MM-dd HH:mm')}">2026-01-13 10:00</td>
@@ -352,7 +359,7 @@
                         </tr>
 
                         <tr th:if="${bookings == null || #lists.isEmpty(bookings)}">
-                            <td colspan="8" class="text-center text-muted py-4">
+                            <td colspan="9" class="text-center text-muted py-4">
                                 Chưa có đặt phòng nào.
                             </td>
                         </tr>
@@ -390,7 +397,7 @@
             const text = normalize(tr.innerText);
 
             // lấy status từ cột trạng thái
-            const statusCell = tr.querySelector('td:nth-child(7)');
+            const statusCell = tr.querySelector('td:nth-child(8)');
             const statusText = normalize(statusCell ? statusCell.innerText : '');
 
             const matchQ = !q || text.includes(q);
