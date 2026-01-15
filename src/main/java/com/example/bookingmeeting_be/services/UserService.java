@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -107,5 +108,12 @@ public class UserService {
     }
     public List<Users> findBookers() {
         return userRepository.findUsersByRoleName("ROLE_BOOKER");
+    }
+    public List<Users> findAll(){
+        return userRepository.findAll();
+    }
+    public Users findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found: " + email));
     }
 }

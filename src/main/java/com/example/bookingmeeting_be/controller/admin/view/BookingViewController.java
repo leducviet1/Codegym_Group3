@@ -3,6 +3,7 @@ package com.example.bookingmeeting_be.controller.admin.view;
 import com.example.bookingmeeting_be.model.Booking;
 import com.example.bookingmeeting_be.model.Device;
 import com.example.bookingmeeting_be.model.dto.BookingRequest;
+import com.example.bookingmeeting_be.repository.BookingAttendeeRepository;
 import com.example.bookingmeeting_be.repository.MeetingRoomRepository;
 import com.example.bookingmeeting_be.services.BookingService;
 import com.example.bookingmeeting_be.services.DeviceService;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin/bookings")
@@ -24,6 +27,8 @@ public class BookingViewController {
     @Autowired
     private BookingService bookingService;
 
+    @Autowired
+    private BookingAttendeeRepository bookingAttendeeRepository;
     @Autowired
     private MeetingRoomService meetingRoomService;
     @Autowired
@@ -39,7 +44,25 @@ public class BookingViewController {
         } else {
             bookings = bookingService.getAllBookings();
         }
+        //Số lượng đã chấp nhận
+        Map<Integer, Long> attendeeCounts = new HashMap<>();
+        for (Object[] row : bookingAttendeeRepository.countAcceptedGroupByBooking()) {
+            Integer bookingId = ((Number) row[0]).intValue();
+            Long cnt = ((Number) row[1]).longValue();
+            attendeeCounts.put(bookingId, cnt);
+        }
+
+        Map<Integer, Long> totalCounts = new HashMap<>();
+        for (Object[] row : bookingAttendeeRepository.countAllGroupByBooking()) {
+            Integer bookingId = ((Number) row[0]).intValue();
+            Long cnt = ((Number) row[1]).longValue();
+            totalCounts.put(bookingId, cnt);
+        }
+        model.addAttribute("invitedCounts", totalCounts);
+
         model.addAttribute("bookings", bookings);
+        model.addAttribute("attendeeCounts", attendeeCounts);
+
         return "admin/booking-list";
     }
 
@@ -53,6 +76,9 @@ public class BookingViewController {
         model.addAttribute("availableDevices", availableDevices);
 
         model.addAttribute("hostUsers", userService.findBookers());
+
+        //Chọn người tham dự
+        model.addAttribute("attendees",userService.findAll());
 
         return "admin/booking-form";
     }
@@ -95,6 +121,9 @@ public class BookingViewController {
         model.addAttribute("isEdit", true);
         model.addAttribute("bookingId", id);
         model.addAttribute("bookingRequest", bookingRequest);
+
+        //Chọn người tham dự
+        model.addAttribute("attendees",userService.findAll());
 
         // data cho select
         model.addAttribute("rooms", meetingRoomService.getAllWithAssets());
