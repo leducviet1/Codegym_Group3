@@ -42,4 +42,10 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             @Param("end") LocalDateTime end
     );
 
+    @Query("""
+            SELECT b FROM Booking b 
+            JOIN BookingAttendee ba ON b.id = ba.booking.id WHERE ba.user.id = :userId 
+            ORDER BY b.startTime DESC
+            """)
+    List<Booking> findBookingsByAttendee(@Param("userId") Integer userId);
 }
