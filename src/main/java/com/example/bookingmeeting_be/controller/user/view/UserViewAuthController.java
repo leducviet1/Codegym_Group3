@@ -42,7 +42,12 @@ public class UserViewAuthController {
     public String logout(HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, "").httpOnly(true).secure(false).path("/").sameSite("Lax").maxAge(0).build();
         response.addHeader("Set-Cookie", cookie.toString());
-        return "redirect:/login";
+        return "redirect:/users/home";
+    }
+    @GetMapping("/register")
+    public String register()
+    {
+        return "auth/register";
     }
     @GetMapping("/debug/me")
     @ResponseBody

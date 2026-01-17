@@ -1,4 +1,4 @@
-package com.example.bookingmeeting_be.controller.user;
+package com.example.bookingmeeting_be.controller.user.view;
 
 import com.example.bookingmeeting_be.model.Booking;
 import com.example.bookingmeeting_be.model.Users;
