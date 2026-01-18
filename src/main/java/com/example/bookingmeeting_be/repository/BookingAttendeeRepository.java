@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,5 +73,18 @@ public interface BookingAttendeeRepository
 """)
     List<Object[]> findStatusesByUserAndBookingIds(@Param("userId") Integer userId,
                                                    @Param("bookingIds") List<Integer> bookingIds);
+
+    @Query("""
+    select count(distinct ba.users.userId)
+    from BookingAttendee ba
+    join ba.booking b
+    where b.status <> :cancelled
+      and b.startTime >= :from and b.startTime < :to
+""")
+    long countDistinctActiveParticipants(
+            @Param("from") LocalDateTime from,
+            @Param("to") LocalDateTime to,
+            @Param("cancelled") String cancelled
+    );
 }
 
