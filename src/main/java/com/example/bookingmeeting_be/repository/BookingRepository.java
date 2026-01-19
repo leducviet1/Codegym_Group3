@@ -99,4 +99,6 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<Booking> findByStartTimeGreaterThanEqualAndStartTimeLessThanAndStatusNot(
             LocalDateTime from, LocalDateTime to, String cancelledStatus);
+
+    long countByStatus(String status);
 }
