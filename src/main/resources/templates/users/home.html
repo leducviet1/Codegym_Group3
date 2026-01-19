@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{layouts/head :: head}">
   <meta charset="UTF-8">
@@ -132,17 +133,18 @@
       </div>
     </div>
 
-    <div class="cta-section" data-aos="fade-up" data-aos-delay="100">
-      <div class="text-center">
-        <h3>Bạn đã sẵn sàng quản lý cuộc họp của bạn?</h3>
-        <p>Đăng ký để sử dụng đầy đủ các tính năng mà OnMeet mang lại.</p>
-        <div class="cta-buttons">
-          <a th:href="@{/register}" class="btn btn-primary">Đăng ký ngay</a>
-          <a th:href="@{/login}" class="btn btn-outline">Đăng nhập</a>
-          <a th:href="@{/login}" class="btn btn-outline">Đăng nhập</a>
-        </div>
+      <div class="cta-section" data-aos="fade-up" data-aos-delay="100"
+           sec:authorize="!isAuthenticated()">
+          <div class="text-center">
+              <h3>Bạn đã sẵn sàng quản lý cuộc họp của bạn?</h3>
+              <p>Đăng ký để sử dụng đầy đủ các tính năng mà OnMeet mang lại.</p>
+              <div class="cta-buttons">
+                  <a th:href="@{/users/register}" class="btn btn-primary">Đăng ký ngay</a>
+                  <a th:href="@{/users/login}" class="btn btn-outline">Đăng nhập</a>
+              </div>
+          </div>
       </div>
-    </div>
+
   </div>
 </section>
 

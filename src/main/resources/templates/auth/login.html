@@ -3,14 +3,12 @@
 
 <head th:replace="~{layouts/head :: head}">
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Đăng nhập</title>
 </head>
 
 <body class="index-page">
 
-<!-- Navbar start -->
 <div th:replace="~{layouts/navbar :: navbar}"></div>
-<!-- Navbar End -->
 
 <main class="main" style="margin-top: 100px;">
 
@@ -28,92 +26,114 @@
         <nav class="breadcrumbs">
             <div class="container">
                 <ol>
-                    <li><a th:href="@{/home}">Trang chủ</a></li>
+                    <li><a th:href="@{/}">Trang chủ</a></li>
                     <li class="current">Đăng nhập</li>
                 </ol>
             </div>
         </nav>
-    </div><section id="login" class="login section light-background">
-    <div class="container" data-aos="fade-up">
-        <div class="row justify-content-center">
-            <div class="col-lg-5 col-md-8">
+    </div>
 
-                <div class="card shadow border-0 rounded-4">
-                    <div class="card-body p-5">
+    <section id="login" class="login section light-background">
+        <div class="container" data-aos="fade-up">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-8">
 
-                        <div class="text-center mb-4">
-                            <h3 class="fw-bold text-primary">Member Login</h3>
-                            <p class="text-muted small">Nhập thông tin xác thực của bạn để tiếp tục</p>
-                        </div>
+                    <div class="card shadow border-0 rounded-4">
+                        <div class="card-body p-5">
 
-                        <div th:if="${param.error}" class="alert alert-danger d-flex align-items-center" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            <div>Sai tên đăng nhập hoặc mật khẩu!</div>
-                        </div>
-
-                        <div th:if="${param.logout}" class="alert alert-success d-flex align-items-center" role="alert">
-                            <i class="bi bi-check-circle-fill me-2"></i>
-                            <div>Bạn đã đăng xuất thành công.</div>
-                        </div>
-
-                        <form th:action="@{/users/login}" method="post">
-
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="username" name="username" placeholder="name@example.com" required>
-                                <label for="username">Email hoặc Tên đăng nhập</label>
+                            <div class="text-center mb-4">
+                                <h3 class="fw-bold text-primary">Member Login</h3>
+                                <p class="text-muted small">Nhập thông tin xác thực của bạn để tiếp tục</p>
                             </div>
 
-                            <div class="form-floating mb-3">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-                                <label for="password">Mật khẩu</label>
+                            <!-- Nếu bạn dùng Spring Security default param error/logout thì giữ -->
+                            <div th:if="${param.error}" class="alert alert-danger d-flex align-items-center" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                <div>Sai tên đăng nhập hoặc mật khẩu!</div>
                             </div>
 
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember-me" id="rememberMe">
-                                    <label class="form-check-label text-secondary small" for="rememberMe">
-                                        Ghi nhớ đăng nhập
-                                    </label>
+                            <div th:if="${param.logout}" class="alert alert-success d-flex align-items-center" role="alert">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                <div>Bạn đã đăng xuất thành công.</div>
+                            </div>
+
+                            <!-- Nếu bạn dùng controller trả model error thì thêm block này -->
+                            <div th:if="${error}" class="alert alert-danger d-flex align-items-center" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                <div th:text="${error}">Lỗi</div>
+                            </div>
+
+                            <form th:action="@{/users/login}" method="post">
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="username" name="username"
+                                           placeholder="name@example.com" required>
+                                    <label for="username">Email hoặc Tên đăng nhập</label>
                                 </div>
-                                <a href="#" class="text-decoration-none small">Quên mật khẩu?</a>
-                            </div>
 
-                            <div class="d-grid mb-4">
-                                <button type="submit" class="btn btn-primary btn-lg py-3 rounded-3 fw-bold">Đăng nhập</button>
-                            </div>
+                                <!-- Password + toggle -->
+                                <div class="form-floating mb-3 position-relative">
+                                    <input type="password" class="form-control" id="password" name="password"
+                                           placeholder="Password" required>
+                                    <label for="password">Mật khẩu</label>
 
-                            <div class="position-relative text-center mb-4">
-                                <hr class="text-secondary">
-                                <span class="position-absolute top-50 start-50 translate-middle px-3 bg-white text-muted small">Hoặc đăng nhập bằng</span>
-                            </div>
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2"
+                                            id="togglePassword"
+                                            aria-label="Hiển thị mật khẩu">
+                                        <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                    </button>
+                                </div>
 
-                            <div class="d-grid gap-2 mb-4">
-                                <button class="btn btn-outline-danger" type="button">
-                                    <i class="bi bi-google me-2"></i> Google
-                                </button>
-                            </div>
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="remember-me" id="rememberMe">
+                                        <label class="form-check-label text-secondary small" for="rememberMe">
+                                            Ghi nhớ đăng nhập
+                                        </label>
+                                    </div>
+                                    <a href="#" class="text-decoration-none small">Quên mật khẩu?</a>
+                                </div>
 
-                            <div class="text-center">
-                                <span class="text-muted small">Bạn chưa có tài khoản?</span>
-                                <a th:href="@{/register}" class="text-decoration-none fw-bold ms-1">Đăng ký ngay</a>
-                            </div>
+                                <div class="d-grid mb-4">
+                                    <button type="submit" class="btn btn-primary btn-lg py-3 rounded-3 fw-bold">Đăng nhập</button>
+                                </div>
 
-                        </form>
+                                <div class="position-relative text-center mb-4">
+                                    <hr class="text-secondary">
+                                    <span class="position-absolute top-50 start-50 translate-middle px-3 bg-white text-muted small">
+                    Hoặc đăng nhập bằng
+                  </span>
+                                </div>
+
+                                <div class="d-grid gap-2 mb-4">
+                                    <button class="btn btn-outline-danger" type="button">
+                                        <i class="bi bi-google me-2"></i> Google
+                                    </button>
+                                </div>
+
+                                <div class="text-center">
+                                    <span class="text-muted small">Bạn chưa có tài khoản?</span>
+                                    <a th:href="@{/users/register}" class="text-decoration-none fw-bold ms-1">Đăng ký ngay</a>
+                                </div>
+
+                            </form>
+
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 </main>
 
-<!-- Footer -->
 <div th:replace="~{layouts/footer :: footer}"></div>
 
-<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
 <div id="preloader"></div>
 
 <script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
@@ -124,8 +144,29 @@
 <script th:src="@{/assets/vendor/isotope-layout/isotope.pkgd.min.js}"></script>
 <script th:src="@{/assets/vendor/swiper/swiper-bundle.min.js}"></script>
 <script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
-
 <script th:src="@{/assets/js/main.js}"></script>
+
+<!-- Toggle password -->
+<script>
+    (function () {
+        const pwd = document.getElementById('password');
+        const btn = document.getElementById('togglePassword');
+        const icon = document.getElementById('togglePasswordIcon');
+        if (!pwd || !btn) return;
+
+        btn.addEventListener('click', function () {
+            const isPassword = pwd.type === 'password';
+            pwd.type = isPassword ? 'text' : 'password';
+
+            if (icon) {
+                icon.classList.toggle('bi-eye', !isPassword);
+                icon.classList.toggle('bi-eye-slash', isPassword);
+            }
+
+            btn.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu');
+        });
+    })();
+</script>
 
 </body>
 </html>

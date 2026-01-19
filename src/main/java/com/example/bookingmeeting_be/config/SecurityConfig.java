@@ -58,22 +58,37 @@ public class SecurityConfig {
                         // static
                         .requestMatchers("/admin/assets/**","/assets/**", "/css/**", "/js/**", "/img/**", "/webjars/**", "/error","/favicon.ico").permitAll()
 
-                        // thymeleaf pages public
-                        .requestMatchers("/", "/users/login", "/users/register", "/admin/login", "/admin/register").permitAll()
+                        // public pages
+                                .requestMatchers("/", "/users/home", "/users/login", "/users/register", "/admin/login", "/admin/register")
+                                .permitAll()
+
+// users secured
+                                .requestMatchers("/users/**")
+                                .hasAnyAuthority("ROLE_ADMIN","ROLE_BOOKER","ROLE_ATTENDEE")
 
                         // api auth public
-                        .requestMatchers("/api/auth/register", "/api/auth/login", "/api/devices/**", "/api/bookings/**").permitAll()
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
-                        // role pages
-//                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_BOOKER","ROLE_ATTENDEE")
-                        .requestMatchers("/users/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_BOOKER","ROLE_ATTENDEE")
+                        // ===== ADMIN RULES =====
+                        // bookings: ADMIN + BOOKER
+                        .requestMatchers("/admin/bookings", "/admin/bookings/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_BOOKER")
+
+                        // admin còn lại: chỉ ADMIN
+                        .requestMatchers("/admin/**")
+                        .hasAuthority("ROLE_ADMIN")
+
+                        // ===== USERS RULES =====
+                        // 3 role đều vào được users
+                        .requestMatchers("/users/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_BOOKER", "ROLE_ATTENDEE")
 
                         // api secured
                         .requestMatchers("/api/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
+
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
