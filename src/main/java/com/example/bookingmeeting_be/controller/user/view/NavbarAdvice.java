@@ -32,4 +32,15 @@ public class NavbarAdvice {
         model.addAttribute("navStatusMap", notificationService.getAttendeeStatusMap(userId, navNotis));
         // nhớ: getAttendeeStatusMap nên trả Map<String,String> như mình đã hướng dẫn
     }
+    @ModelAttribute("navFullname")
+    public String navFullname(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) return null;
+
+        String email = authentication.getName(); // đang là email/username
+        try {
+            return userService.findByEmail(email).getFullname();
+        } catch (Exception e) {
+            return email; // fallback nếu không có user
+        }
+    }
 }

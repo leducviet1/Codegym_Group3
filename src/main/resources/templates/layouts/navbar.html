@@ -193,10 +193,28 @@
                 </div>
 
                 <a class="btn-getstarted" th:href="@{/users/login}" sec:authorize="!isAuthenticated()">Đăng nhập</a>
-                <div sec:authorize="isAuthenticated()">
-                    Xin chào,
-                    <span sec:authentication="name"></span>
+                <div class="dropdown" sec:authorize="isAuthenticated()">
+                    <a class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
+                       href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Xin chào,
+                        <!-- nếu bạn set được fullname vào principal thì dùng dòng dưới -->
+                        <span class="ms-1 fw-semibold" th:text="${navFullname}">User</span>
+                        <!-- fallback tạm thời: nếu chưa có fullname thì dùng email -->
+                        <!-- <span class="ms-1 fw-semibold" sec:authentication="name"></span> -->
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3"
+                        aria-labelledby="userDropdown">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2"
+                               th:href="@{/users/logout}">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
                 </div>
+
             </div>
         </div>
     </header>
