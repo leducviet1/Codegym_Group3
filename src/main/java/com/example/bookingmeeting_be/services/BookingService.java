@@ -209,4 +209,11 @@ public class BookingService {
         }
     }
 
+    public List<Booking> getMyHostedBookings(Integer userId) {
+        return bookingRepository.findByHostUserIdOrderByStartTimeDesc(userId);
+    }
+
+    public List<Booking> getMyInvitedBookings(Integer userId) {
+        return bookingRepository.findBookingsByAttendee(userId);
+    }
 }
