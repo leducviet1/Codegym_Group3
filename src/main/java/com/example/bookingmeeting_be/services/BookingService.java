@@ -27,27 +27,44 @@ public class BookingService {
     private NotificationRepository notificationRepository;
     @Autowired
     private NotificationRecipientRepository notificationRecipientRepository;
+    @Autowired
+    private MeetingRoomRepository meetingRoomRepository;
 
     @Transactional
     public Booking createBooking(BookingRequest request) {
-        //Validate Time
         if (request.getStartTime() == null || request.getEndTime() == null) {
-            throw new RuntimeException("Không đuợc trống thời gian");
+            throw new RuntimeException("Start time and End time cannot be empty");
         }
         if (!request.getStartTime().isBefore(request.getEndTime())) {
-            throw new RuntimeException("Thời gian kết thúc phải lớn hơn thời gian bắt đầu");
+            throw new RuntimeException("End time must be after Start time");
         }
         if (request.getStartTime().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Không được đặt thời gian trong quá khứ");
+            throw new RuntimeException("Cannot book a meeting in the past");
         }
+
         boolean isConflict = bookingRepository.existsOverlappingBooking(
                 request.getRoomId(),
                 request.getStartTime(),
                 request.getEndTime()
         );
         if (isConflict) {
-            throw new RuntimeException("Không thể đặt phòng họp này trong thời gian này");
+            throw new RuntimeException("This room is already booked for the selected time");
         }
+
+        MeetingRoom room = meetingRoomRepository.findById(request.getRoomId())
+                .orElseThrow(() -> new RuntimeException("Room not found with ID: " + request.getRoomId()));
+
+        int guestCount = (request.getAttendeeUserIds() == null) ? 0 : request.getAttendeeUserIds().size();
+
+        boolean hostCounts = (request.getIsHostParticipating() == null) || request.getIsHostParticipating();
+
+        int totalAttendees = guestCount + (hostCounts ? 1 : 0);
+
+        if (totalAttendees > room.getCapacity()) {
+            throw new RuntimeException("Room capacity exceeded. Room holds " + room.getCapacity() +
+                    " people, but total attendees are " + totalAttendees);
+        }
+
         Booking booking = new Booking();
         booking.setTitle(request.getTitle());
         booking.setDescription(request.getDescription());
@@ -76,10 +93,11 @@ public class BookingService {
 
                     BookingDevice bookingDevice = new BookingDevice(savedBooking, device, item.getQuantity());
                     bookingDeviceRepository.save(bookingDevice);
-                    syncAttendeesAndNotify(savedBooking,request.getAttendeeUserIds(),false);
                 }
             }
         }
+
+        syncAttendeesAndNotify(savedBooking, request.getAttendeeUserIds(), false);
 
         return savedBooking;
     }

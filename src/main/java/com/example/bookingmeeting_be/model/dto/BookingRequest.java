@@ -53,4 +53,6 @@ public class BookingRequest {
         private int quantity;
     }
     private List<Integer> attendeeUserIds;
+
+    private Boolean isHostParticipating;
 }
