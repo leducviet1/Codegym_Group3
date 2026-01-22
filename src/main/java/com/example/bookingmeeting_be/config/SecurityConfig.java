@@ -61,8 +61,6 @@ public class SecurityConfig {
                         // public pages
                                 .requestMatchers("/", "/users/home", "/users/login", "/users/register", "/admin/login", "/admin/register")
                                 .permitAll()
-
-// users secured
                                 .requestMatchers("/users/**")
                                 .hasAnyAuthority("ROLE_ADMIN","ROLE_BOOKER","ROLE_ATTENDEE")
 

@@ -3,15 +3,12 @@
 
 <head th:replace="~{layouts/head :: head}">
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Hồ sơ cá nhân</title>
 </head>
 
 <body class="index-page">
 
-<!-- Navbar start -->
 <div th:replace="~{layouts/navbar :: navbar}"></div>
-<!-- Navbar End -->
-
 <main class="main" style="margin-top: 100px;">
 
     <div class="page-title">
@@ -37,15 +34,30 @@
 
     <section class="section profile">
         <div class="container" data-aos="fade-up">
+
+            <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-1"></i>
+                <span th:text="${message}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-octagon me-1"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <div class="row">
 
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                            <img th:src="@{/assets/img/events/speaker-8.webp}" alt="Profile" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
 
-                            <h2 class="mb-1">Nguyễn Đình Thiệp</h2>
-                            <h3 class="text-muted">Manager</h3>
+                            <img th:src="@{${user.avatarPath}}"
+                                 alt="Profile"
+                                 class="rounded-circle mb-3"
+                                 style="width: 120px; height: 120px; object-fit: cover;">
+
+                            <h2 class="mb-1" th:text="${user.fullname}">Tên người dùng</h2>
+                            <h3 class="text-muted" th:text="${user.jobTitle} ?: 'Thành viên'">Chức vụ</h3>
 
                             <div class="social-links mt-2">
                                 <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
@@ -80,23 +92,23 @@
 
                                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
                                     <h5 class="card-title mt-3">Giới thiệu</h5>
-                                    <p class="small fst-italic">Xin chào, tôi là một người yêu thích công nghệ và đang tìm kiếm các giải pháp phòng họp tốt nhất cho doanh nghiệp của mình.</p>
+                                    <p class="small fst-italic" th:text="${user.about} ?: 'Chưa có thông tin giới thiệu.'">...</p>
 
                                     <h5 class="card-title">Chi tiết hồ sơ</h5>
 
                                     <div class="row mb-3">
                                         <div class="col-lg-3 col-md-4 label text-muted">Họ và tên</div>
-                                        <div class="col-lg-9 col-md-8 fw-bold">Nguyễn Đình Thiệp</div>
+                                        <div class="col-lg-9 col-md-8 fw-bold" th:text="${user.fullname}"></div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <div class="col-lg-3 col-md-4 label text-muted">Công ty</div>
-                                        <div class="col-lg-9 col-md-8">OnMeet</div>
+                                        <div class="col-lg-9 col-md-8" th:text="${user.company}"></div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <div class="col-lg-3 col-md-4 label text-muted">Nghề nghiệp</div>
-                                        <div class="col-lg-9 col-md-8">Quản lý dự án</div>
+                                        <div class="col-lg-9 col-md-8" th:text="${user.jobTitle}"></div>
                                     </div>
 
                                     <div class="row mb-3">
@@ -106,17 +118,17 @@
 
                                     <div class="row mb-3">
                                         <div class="col-lg-3 col-md-4 label text-muted">Địa chỉ</div>
-                                        <div class="col-lg-9 col-md-8">04 Vo Thi Sau, Tp Vinh, Nghe An</div>
+                                        <div class="col-lg-9 col-md-8" th:text="${user.address}"></div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <div class="col-lg-3 col-md-4 label text-muted">Số điện thoại</div>
-                                        <div class="col-lg-9 col-md-8">(+84) 899 073 387</div>
+                                        <div class="col-lg-9 col-md-8" th:text="${user.phone}"></div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <div class="col-lg-3 col-md-4 label text-muted">Email</div>
-                                        <div class="col-lg-9 col-md-8">thiepthanhx03@gmail.com</div>
+                                        <div class="col-lg-9 col-md-8" th:text="${user.email}"></div>
                                     </div>
                                 </div>
 
@@ -127,9 +139,10 @@
                                         <div class="row mb-3">
                                             <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Ảnh đại diện</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <img th:src="@{/assets/img/events/speaker-8.webp}" alt="Profile" class="rounded-circle mb-2" style="width: 100px;">
+                                                <img th:src="@{${user.avatarPath}}"
+                                                     alt="Profile" class="rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;">
                                                 <div class="pt-2">
-                                                    <input class="form-control" type="file" id="profileImage" name="profileImage">
+                                                    <input class="form-control" type="file" id="profileImage" name="profileImage" accept="image/png, image/jpeg">
                                                 </div>
                                             </div>
                                         </div>
@@ -137,42 +150,49 @@
                                         <div class="row mb-3">
                                             <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Họ và tên</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="fullName" type="text" class="form-control" id="fullName" value="Nguyễn Đình Thiệp">
+                                                <input name="fullName" type="text" class="form-control" id="fullName" th:value="${user.fullname}" required>
                                             </div>
                                         </div>
 
                                         <div class="row mb-3">
                                             <label for="about" class="col-md-4 col-lg-3 col-form-label">Giới thiệu</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <textarea name="about" class="form-control" id="about" style="height: 100px">Xin chào, tôi là...</textarea>
+                                                <textarea name="about" class="form-control" id="about" style="height: 100px" th:text="${user.about}"></textarea>
                                             </div>
                                         </div>
 
                                         <div class="row mb-3">
                                             <label for="company" class="col-md-4 col-lg-3 col-form-label">Công ty</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="company" type="text" class="form-control" id="company" value="OnMeet">
+                                                <input name="company" type="text" class="form-control" id="company" th:value="${user.company}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="jobTitle" class="col-md-4 col-lg-3 col-form-label">Nghề nghiệp</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="jobTitle" type="text" class="form-control" id="jobTitle" th:value="${user.jobTitle}">
                                             </div>
                                         </div>
 
                                         <div class="row mb-3">
                                             <label for="Address" class="col-md-4 col-lg-3 col-form-label">Địa chỉ</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="address" type="text" class="form-control" id="Address" value="04 Vo Thi Sau, Tp Vinh, Nghe An">
+                                                <input name="address" type="text" class="form-control" id="Address" th:value="${user.address}">
                                             </div>
                                         </div>
 
                                         <div class="row mb-3">
                                             <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Số điện thoại</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="phone" type="text" class="form-control" id="Phone" value="(+84) 899 073 387">
+                                                <input name="phone" type="text" class="form-control" id="Phone" th:value="${user.phone}">
                                             </div>
                                         </div>
 
                                         <div class="row mb-3">
                                             <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                             <div class="col-md-8 col-lg-9">
-                                                <input name="email" type="email" class="form-control" id="Email" value="thiepthanhx03.com" disabled>
+                                                <input name="email" type="email" class="form-control" id="Email" th:value="${user.email}" disabled>
                                                 <small class="text-muted fst-italic">*Không thể thay đổi email đăng nhập</small>
                                             </div>
                                         </div>
@@ -180,7 +200,8 @@
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                                         </div>
-                                    </form></div>
+                                    </form>
+                                </div>
 
                                 <div class="tab-pane fade pt-3" id="profile-change-password">
                                     <form th:action="@{/profile/change-password}" method="post">
@@ -209,9 +230,11 @@
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
                                         </div>
-                                    </form></div>
+                                    </form>
+                                </div>
 
-                            </div></div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -221,7 +244,6 @@
 
 </main>
 
-<!-- Footer -->
 <div th:replace="~{layouts/footer :: footer}"></div>
 
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

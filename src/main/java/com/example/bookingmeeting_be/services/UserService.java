@@ -15,12 +15,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -69,6 +76,7 @@ public class UserService {
         }
         throw new RuntimeException("Login failed");
     }
+
     @Transactional
     public Page<UserResponse> listUsers(String q, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("userId").descending());
@@ -77,6 +85,7 @@ public class UserService {
                 : userRepository.findByEmailContainingIgnoreCaseOrFullnameContainingIgnoreCase(q, q, pageable);
         return usersPage.map(this::toDto);
     }
+
     private UserResponse toDto(Users user) {
         UserResponse dto = new UserResponse();
         dto.setUserId(user.getUserId());
@@ -87,13 +96,9 @@ public class UserService {
 
         dto.setRoles(roleNames);
         dto.setRolesText(String.join(",", roleNames));
-
-//        boolean isAdmin = user.getRole() != null && user.getRole().stream()
-//                .anyMatch(r -> "ROLE_ADMIN".equals(r.getName()));
-//
-//        dto.setRole(isAdmin ? "ADMIN" : "USER");
         return dto;
     }
+
     //Update Role user
     @Transactional
     public void updateRolesUser(int userId,Set<String> roleNames) {
@@ -104,16 +109,58 @@ public class UserService {
 
         user.setRole(newRoles);
         userRepository.save(user);
-
     }
+
     public List<Users> findBookers() {
         return userRepository.findUsersByRoleName("ROLE_BOOKER");
     }
+
     public List<Users> findAll(){
         return userRepository.findAll();
     }
+
     public Users findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found: " + email));
+    }
+
+    public void updateProfile(Users user, String fullname, String phone, String address,
+                              String company, String jobTitle, String about,
+                              MultipartFile multipartFile) throws IOException {
+
+        if (fullname != null && !fullname.isEmpty()) user.setFullname(fullname);
+        user.setPhone(phone);
+        user.setAddress(address);
+        user.setCompany(company);
+        user.setJobTitle(jobTitle);
+        user.setAbout(about);
+
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+            user.setAvatar(fileName);
+
+            String uploadDir = "user-photos/" + user.getUserId();
+            Path uploadPath = Paths.get(uploadDir);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            try (InputStream inputStream = multipartFile.getInputStream()) {
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+
+        userRepository.save(user);
+    }
+
+    public boolean changePassword(Users user, String currentPass, String newPass) {
+        if (!passwordEncoder.matches(currentPass, user.getPassword())) {
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(newPass));
+        userRepository.save(user);
+        return true;
     }
 }
