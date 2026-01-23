@@ -145,5 +145,30 @@ public class BookingViewController {
             return "redirect:/admin/bookings/" + id + "/edit";
         }
     }
+    @GetMapping("/{id}")
+    public String bookingDetail(@PathVariable Integer id, Model model) {
+        Booking booking = bookingService.getBookingById(id);
+
+        // unwrap Optional -> trả entity thật
+        var roomOpt = meetingRoomService.getById(booking.getRoomId());
+        model.addAttribute("room", roomOpt.orElse(null));
+        var host = userService.findById(booking.getHostUserId());
+
+        var attendees = bookingAttendeeRepository.findAllByBookingIdFetchUser(id);
+        var accepted = attendees.stream()
+                .filter(a -> "ACCEPTED".equalsIgnoreCase(a.getStatus()))
+                .toList();
+
+        model.addAttribute("booking", booking);
+        model.addAttribute("host", host);
+        model.addAttribute("attendees", attendees);
+        model.addAttribute("acceptedAttendees", accepted);
+        model.addAttribute("acceptedCount", (long) accepted.size());
+        model.addAttribute("invitedCount", (long) attendees.size());
+
+        return "admin/booking-detail";
+    }
+
+
 
 }

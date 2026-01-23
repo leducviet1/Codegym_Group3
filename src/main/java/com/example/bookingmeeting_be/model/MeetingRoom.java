@@ -87,4 +87,8 @@ public class MeetingRoom {
     public void setRoomAssets(Set<RoomAsset> roomAssets) {
         this.roomAssets = roomAssets;
     }
+    @Transient
+    public String getDescription() {
+        return ""; // hoặc return this.note;
+    }
 }

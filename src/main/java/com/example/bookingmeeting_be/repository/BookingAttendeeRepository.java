@@ -86,5 +86,31 @@ public interface BookingAttendeeRepository
             @Param("to") LocalDateTime to,
             @Param("cancelled") String cancelled
     );
+
+    @Query("""
+    select ba
+    from BookingAttendee ba
+    join fetch ba.users u
+    where ba.booking.id = :bookingId
+    order by
+      case ba.status
+        when 'ACCEPTED' then 1
+        when 'INVITED' then 2
+        when 'PENDING' then 3
+        when 'DECLINED' then 4
+        else 9
+      end, u.fullname
+""")
+    List<BookingAttendee> findAllByBookingIdFetchUser(@Param("bookingId") Integer bookingId);
+
+    @Query("""
+    select ba
+    from BookingAttendee ba
+    join fetch ba.users u
+    where ba.booking.id = :bookingId and ba.status = 'ACCEPTED'
+    order by u.fullname
+""")
+    List<BookingAttendee> findAcceptedByBookingIdFetchUser(@Param("bookingId") Integer bookingId);
+
 }
 

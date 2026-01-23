@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết lịch họp</title>
+    <div th:replace="~{layouts/admin-head :: admin-head}"></div>
+    <style>
+        .meta-label{color:#6c757d;font-size:12px;margin-bottom:4px}
+        .meta-value{font-weight:600}
+        .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid rgba(0,0,0,.1)}
+        .chip-accepted{background:rgba(25,135,84,.12);color:#198754;border-color:rgba(25,135,84,.25)}
+        .chip-invited{background:rgba(13,110,253,.10);color:#0d6efd;border-color:rgba(13,110,253,.20)}
+        .chip-declined{background:rgba(220,53,69,.10);color:#dc3545;border-color:rgba(220,53,69,.20)}
+        .table td,.table th{vertical-align:middle;white-space:nowrap}
+        .col-user{white-space:normal}
+        .avatar{width:34px;height:34px;border-radius:50%;object-fit:cover}
+    </style>
+</head>
+
+<body>
+<div th:replace="~{layouts/admin-navbar :: admin-navbar}"></div>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Chi tiết lịch họp #<span th:text="${booking.id}">1</span></h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/admin}">Home</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/admin/bookings}">Bookings</a></li>
+                <li class="breadcrumb-item active">Chi tiết</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="card">
+            <div class="card-body pt-3">
+
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div>
+                        <h5 class="card-title mb-1" th:text="${booking.title}">Tiêu đề</h5>
+                        <div class="text-muted small" th:text="${booking.description} ?: '—'">Mô tả</div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-outline-secondary" th:href="@{/admin/bookings}">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                        <a class="btn btn-outline-primary" th:href="@{/admin/bookings/{id}/edit(id=${booking.id})}">
+                            <i class="bi bi-pencil-square"></i> Sửa
+                        </a>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Meta info -->
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="meta-label">Phòng họp</div>
+                        <div class="meta-value" th:text="${room != null ? room.name : '—'}">Room A</div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="meta-label">Host</div>
+                        <div class="meta-value" th:text="${host.fullname} ?: ${host.id}">Host</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="meta-label">Bắt đầu</div>
+                        <div class="meta-value" th:text="${#temporals.format(booking.startTime,'yyyy-MM-dd HH:mm')}">...</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="meta-label">Kết thúc</div>
+                        <div class="meta-value" th:text="${#temporals.format(booking.endTime,'yyyy-MM-dd HH:mm')}">...</div>
+                    </div>
+                </div>
+
+                <div class="mt-3 d-flex gap-2 flex-wrap">
+          <span class="chip chip-accepted">
+            <i class="bi bi-check-circle"></i>
+            <span th:text="${acceptedCount}">0</span>/<span th:text="${invitedCount}">0</span> đã xác nhận
+          </span>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Attendees tabs -->
+                <ul class="nav nav-tabs nav-tabs-bordered">
+                    <li class="nav-item">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-all">
+                            Tất cả người được mời (<span th:text="${invitedCount}">0</span>)
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-accepted">
+                            Đã xác nhận (<span th:text="${acceptedCount}">0</span>)
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content pt-3">
+                    <!-- All -->
+                    <div class="tab-pane fade show active" id="tab-all">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Người tham dự</th>
+                                    <th>Email</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="a : ${attendees}">
+                                    <td class="col-user">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img class="avatar"
+                                                 th:if="${#strings.isEmpty(a.users.avatarPath)}"
+                                                 th:src="@{/admin/assets/img/profile-img.jpg}"
+                                                 alt="avatar">
+
+                                            <!-- avatar user -->
+                                            <img class="avatar"
+                                                 th:unless="${#strings.isEmpty(a.users.avatarPath)}"
+                                                 th:src="${a.users.avatarPath}"
+                                                 alt="avatar">
+                                            <div>
+                                                <div class="fw-semibold" th:text="${a.users.fullname}">Name</div>
+                                                <div class="text-muted small" th:text="'ID: ' + ${a.users.userId}">ID</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td th:text="${a.users.email}">mail</td>
+                                    <td>
+                                        <span th:if="${a.status == 'ACCEPTED'}" class="chip chip-accepted"><i class="bi bi-check-circle"></i> ACCEPTED</span>
+                                        <span th:if="${a.status == 'INVITED' or a.status == 'PENDING'}" class="chip chip-invited"><i class="bi bi-hourglass-split"></i> INVITED</span>
+                                        <span th:if="${a.status == 'DECLINED'}" class="chip chip-declined"><i class="bi bi-x-circle"></i> DECLINED</span>
+                                        <span th:if="${a.status != 'ACCEPTED' and a.status != 'INVITED' and a.status != 'PENDING' and a.status != 'DECLINED'}"
+                                              class="chip" th:text="${a.status}">UNKNOWN</span>
+                                    </td>
+                                </tr>
+
+                                <tr th:if="${attendees == null || #lists.isEmpty(attendees)}">
+                                    <td colspan="3" class="text-center text-muted py-4">Chưa có người tham dự.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Accepted -->
+                    <div class="tab-pane fade" id="tab-accepted">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Người đã xác nhận</th>
+                                    <th>Email</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="a : ${acceptedAttendees}">
+                                    <td class="col-user">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img class="avatar"
+                                                 th:if="${#strings.isEmpty(a.users.avatarPath)}"
+                                                 th:src="@{/admin/assets/img/profile-img.jpg}"
+                                                 alt="avatar">
+
+                                            <img class="avatar"
+                                                 th:unless="${#strings.isEmpty(a.users.avatarPath)}"
+                                                 th:src="${a.users.avatarPath}"
+                                                 alt="avatar">
+                                            <div class="fw-semibold" th:text="${a.users.fullname}">Name</div>
+                                        </div>
+                                    </td>
+                                    <td th:text="${a.users.email}">mail</td>
+                                </tr>
+
+                                <tr th:if="${acceptedAttendees == null || #lists.isEmpty(acceptedAttendees)}">
+                                    <td colspan="2" class="text-center text-muted py-4">Chưa có ai xác nhận.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{layouts/admin-footer :: admin-footer}"></div>
+</body>
+</html>

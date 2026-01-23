@@ -163,4 +163,8 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
+    public Users findById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với id=" + id));
+    }
 }

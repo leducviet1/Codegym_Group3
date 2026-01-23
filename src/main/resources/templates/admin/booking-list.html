@@ -184,7 +184,6 @@
 <!--</html>-->
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>Quản lý đặt phòng</title>
@@ -192,36 +191,51 @@
     <div th:replace="~{layouts/admin-head :: admin-head}"></div>
 
     <style>
-        /* Status badge */
-        .status-badge {
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+        /* ====== Badges status ====== */
+        .status-badge{
+            padding:6px 10px;border-radius:999px;font-size:12px;font-weight:600;
+            display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
         }
-        .status-confirmed { background: rgba(25,135,84,.12); color: #198754; border: 1px solid rgba(25,135,84,.25); }
-        .status-pending { background: rgba(255,193,7,.18); color: #a16207; border: 1px solid rgba(255,193,7,.35); }
-        .status-cancelled { background: rgba(108,117,125,.14); color: #6c757d; border: 1px solid rgba(108,117,125,.25); }
+        .status-confirmed{background:rgba(25,135,84,.12);color:#198754;border:1px solid rgba(25,135,84,.25);}
+        .status-pending{background:rgba(255,193,7,.18);color:#a16207;border:1px solid rgba(255,193,7,.35);}
+        .status-cancelled{background:rgba(108,117,125,.14);color:#6c757d;border:1px solid rgba(108,117,125,.25);}
 
-        .table td, .table th { vertical-align: middle; }
+        /* ====== Filters ====== */
+        .filter-wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+        #searchInput{min-width:320px;}
+        .btn-icon{display:inline-flex;align-items:center;gap:6px;}
 
-        /* Action buttons in one line */
-        .action-col { white-space: nowrap; }
-        .btn-icon { display:inline-flex; align-items:center; gap:6px; }
-        .filter-wrap { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-        #searchInput { min-width: 320px; }
+        /* ====== Table: chống gãy chữ ====== */
+        #bookingTable{min-width:1300px;} /* giúp table đủ rộng, thiếu chỗ sẽ cuộn ngang */
+        #bookingTable th,#bookingTable td{
+            vertical-align:middle;
+            white-space:nowrap;
+            overflow-wrap:normal;
+            word-break:normal;
+        }
+
+        /* ====== Title column: ellipsis ====== */
+        .col-title{max-width:420px;}
+        .col-title .title{
+            display:block;font-weight:600;
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+        }
+        .col-title .desc{
+            display:block;color:#6c757d;font-size:12px;
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+        }
+
+        /* ====== Action buttons: luôn 1 hàng ====== */
+        .action-col{white-space:nowrap;}
+        .action-col .btn-group{display:inline-flex;flex-wrap:nowrap;}
+        .action-col .btn{white-space:nowrap;}
     </style>
 </head>
 
 <body>
-
 <div th:replace="~{layouts/admin-navbar :: admin-navbar}"></div>
 
 <main id="main" class="main">
-
     <div class="pagetitle">
         <h1>Quản lý đặt phòng</h1>
         <nav>
@@ -237,19 +251,17 @@
 
     <section class="section">
         <div class="card">
-
-            <!-- Card header đẹp hơn -->
             <div class="card-body pt-3">
 
+                <!-- Header -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                     <div>
                         <h5 class="card-title mb-0">Danh sách lịch họp</h5>
-                        <div class="text-muted small">Tìm kiếm nhanh theo tiêu đề/mô tả/phòng/host, lọc theo trạng thái.</div>
+                        <div class="text-muted small">Tìm theo tiêu đề/mô tả/phòng/host, lọc theo trạng thái.</div>
                     </div>
 
                     <a class="btn btn-primary btn-icon" th:href="@{/admin/bookings/create}">
-                        <i class="bi bi-plus-circle"></i>
-                        <span>Tạo đặt phòng</span>
+                        <i class="bi bi-plus-circle"></i><span>Tạo đặt phòng</span>
                     </a>
                 </div>
 
@@ -272,20 +284,20 @@
                     </div>
                 </div>
 
-                <!-- table -->
+                <!-- Table -->
                 <div class="table-responsive">
                     <table class="table table-hover align-middle" id="bookingTable">
                         <thead class="table-light">
                         <tr>
-                            <th style="width: 70px;">ID</th>
+                            <th style="width:70px;">ID</th>
                             <th>Tiêu đề</th>
-                            <th style="width: 120px;">Room</th>
-                            <th style="width: 120px;">Host</th>
-                            <th style="width: 120px;">AttendeeUser</th>
-                            <th style="width: 190px;">Bắt đầu</th>
-                            <th style="width: 190px;">Kết thúc</th>
-                            <th style="width: 150px;">Trạng thái</th>
-                            <th style="width: 210px;">Hành động</th>
+                            <th style="width:120px;">Room</th>
+                            <th style="width:120px;">Host</th>
+                            <th style="width:170px;">Đã xác nhận</th>
+                            <th style="width:190px;">Bắt đầu</th>
+                            <th style="width:190px;">Kết thúc</th>
+                            <th style="width:160px;">Trạng thái</th>
+                            <th style="width:220px;">Hành động</th>
                         </tr>
                         </thead>
 
@@ -293,39 +305,32 @@
                         <tr th:each="b : ${bookings}">
                             <td class="fw-semibold" th:text="${b.id}">1</td>
 
-                            <td>
-                                <div class="fw-semibold" th:text="${b.title}">Title</div>
-                                <div class="text-muted small"
-                                     th:text="${#strings.abbreviate(b.description, 80)}">desc...</div>
+                            <td class="col-title">
+                                <span class="title" th:text="${b.title}">Title</span>
+                                <span class="desc"
+                                      th:text="${#strings.isEmpty(b.description) ? '—' : #strings.abbreviate(b.description, 80)}">desc...</span>
                             </td>
 
-                            <td>
-                                <span class="badge text-bg-light border" th:text="${b.roomId}">101</span>
+                            <td><span class="badge text-bg-light border" th:text="${b.roomId}">101</span></td>
+                            <td><span class="badge text-bg-light border" th:text="${b.hostUserId}">5</span></td>
+
+                            <td th:text="(${attendeeCounts[b.id]} ?: 0) + '/' + ((${invitedCounts} != null) ? (${invitedCounts[b.id]} ?: 0) : 0) + ' người'">
+                                0/0 người
                             </td>
-
-                            <td>
-                                <span class="badge text-bg-light border" th:text="${b.hostUserId}">5</span>
-                            </td>
-                            <td th:text="(${attendeeCounts[b.id]} ?: 0) + '/' + ((${invitedCounts} != null) ? (${invitedCounts[b.id]} ?: 0) : 0) + ' người'"></td>
-
-
-
-
-
 
                             <td th:text="${#temporals.format(b.startTime, 'yyyy-MM-dd HH:mm')}">2026-01-13 09:00</td>
                             <td th:text="${#temporals.format(b.endTime, 'yyyy-MM-dd HH:mm')}">2026-01-13 10:00</td>
 
                             <td>
-                                <span th:if="${b.status == 'CONFIRMED'}" class="status-badge status-confirmed">
-                                    <i class="bi bi-check-circle"></i> CONFIRMED
-                                </span>
+                <span th:if="${b.status == 'CONFIRMED'}" class="status-badge status-confirmed">
+                  <i class="bi bi-check-circle"></i> CONFIRMED
+                </span>
                                 <span th:if="${b.status == 'PENDING'}" class="status-badge status-pending">
-                                    <i class="bi bi-hourglass-split"></i> PENDING
-                                </span>
+                  <i class="bi bi-hourglass-split"></i> PENDING
+                </span>
                                 <span th:if="${b.status == 'CANCELLED'}" class="status-badge status-cancelled">
-                                    <i class="bi bi-x-circle"></i> CANCELLED
-                                </span>
+                  <i class="bi bi-x-circle"></i> CANCELLED
+                </span>
                                 <span th:if="${b.status != 'CONFIRMED' and b.status != 'PENDING' and b.status != 'CANCELLED'}"
                                       class="status-badge status-cancelled"
                                       th:text="${b.status}">UNKNOWN</span>
@@ -334,21 +339,17 @@
                             <td class="action-col">
                                 <div class="btn-group" role="group">
                                     <a class="btn btn-sm btn-outline-secondary btn-icon"
-                                       th:href="@{/admin/bookings/{id}(id=${b.id})}"
-                                       title="Xem chi tiết">
+                                       th:href="@{/admin/bookings/{id}(id=${b.id})}" title="Xem chi tiết">
                                         <i class="bi bi-eye"></i> Xem
                                     </a>
 
                                     <a class="btn btn-sm btn-outline-primary btn-icon"
-                                       th:href="@{/admin/bookings/{id}/edit(id=${b.id})}"
-                                       title="Chỉnh sửa">
+                                       th:href="@{/admin/bookings/{id}/edit(id=${b.id})}" title="Chỉnh sửa">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </a>
 
-                                    <form th:action="@{/admin/bookings/{id}/cancel(id=${b.id})}"
-                                          method="post" style="display:inline;">
-                                        <button type="submit"
-                                                class="btn btn-sm btn-outline-danger btn-icon"
+                                    <form th:action="@{/admin/bookings/{id}/cancel(id=${b.id})}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger btn-icon"
                                                 title="Hủy booking"
                                                 onclick="return confirm('Bạn có chắc muốn hủy booking này?');">
                                             <i class="bi bi-x-octagon"></i> Hủy
@@ -359,9 +360,7 @@
                         </tr>
 
                         <tr th:if="${bookings == null || #lists.isEmpty(bookings)}">
-                            <td colspan="9" class="text-center text-muted py-4">
-                                Chưa có đặt phòng nào.
-                            </td>
+                            <td colspan="9" class="text-center text-muted py-4">Chưa có đặt phòng nào.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -370,10 +369,8 @@
             </div>
         </div>
     </section>
-
 </main>
 
-<!-- ✅ QUAN TRỌNG: thêm footer để load JS của template (Bootstrap/NiceAdmin) -->
 <div th:replace="~{layouts/admin-footer :: admin-footer}"></div>
 
 <script>
@@ -385,9 +382,7 @@
     const rows = () => Array.from(table.querySelectorAll('tbody tr'))
         .filter(r => !r.querySelector('td[colspan]'));
 
-    function normalize(s) {
-        return (s || '').toString().toLowerCase();
-    }
+    const normalize = (s) => (s || '').toString().toLowerCase();
 
     function applyFilter() {
         const q = normalize(searchInput.value);
@@ -395,8 +390,6 @@
 
         rows().forEach(tr => {
             const text = normalize(tr.innerText);
-
-            // lấy status từ cột trạng thái
             const statusCell = tr.querySelector('td:nth-child(8)');
             const statusText = normalize(statusCell ? statusCell.innerText : '');
 
@@ -410,7 +403,6 @@
     searchInput.addEventListener('input', applyFilter);
     statusFilter.addEventListener('change', applyFilter);
 </script>
-
 </body>
 </html>
 
